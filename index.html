@@ -196,7 +196,7 @@ body {
 
   <header class="scoreboard-header">
     <div class="header-left">
-      <span class="league-tag">// Thessaloniki Amateur League</span>
+      <span class="league-tag">// Thessaloniki Basketaki League</span>
       <div><div class="team-name-top">AIR</div><div class="team-name-bot">BALLERS</div></div>
       <span class="season-label">2025 – 26 Season</span>
     </div>
@@ -679,7 +679,7 @@ function buildTicker(stats, ng) {
   const opp = ng ? ng.oppName.toUpperCase() : '—';
   const ha  = ng ? ng.ha.toUpperCase() : '';
   const items = [
-    `AIR BALLERS <span class="ticker-sep">·</span> THESSALONIKI AMATEUR LEAGUE`,
+    `AIR BALLERS <span class="ticker-sep">·</span> THESSALONIKI BASKETAKI LEAGUE`,
     `SEASON 2025–26 <span class="ticker-sep">·</span> RECORD ${stats.wins}W – ${stats.losses}L`,
     `NEXT GAME <span class="ticker-sep">·</span> VS ${opp} <span class="ticker-sep">·</span> ${ha}`,
     `WIN PCT ${stats.pct} <span class="ticker-sep">·</span> STREAK ${stats.st==='neutral'?'—':(stats.st==='win'?'W':'L')+stats.sc}`,
