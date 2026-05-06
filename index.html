@@ -226,12 +226,13 @@ body {
     <div class="stat-cell">
       <span class="stat-tag">Next Opponent</span>
       <div class="stat-val" id="st-opp" style="font-size:1.5rem;font-family:var(--mono);color:var(--white);">—</div>
-      <div class="stat-sub" id="st-time">—</div>
-      <div class="stat-sub" id="st-date" style="margin-top:0.15rem;font-size:0.8rem;color:#777;">—</div>
+      <div class="stat-sub" id="st-time" style="font-size:0.9rem;color:#aaa;font-weight:600;margin-top:0.5rem;">—</div>
+      <div class="stat-sub" id="st-date" style="font-size:0.78rem;color:#666;font-weight:500;margin-top:0.2rem;">—</div>
     </div>
-    <div class="stat-cell" style="display:none;" id="tipoff-cell">
+    <div class="stat-cell">
       <span class="stat-tag">Tip-off</span>
-      <div class="stat-val" style="font-size:1.5rem;font-family:var(--mono);color:var(--white);">—</div>
+      <div class="stat-val" id="st-tipoff-time" style="font-size:1.5rem;font-family:var(--mono);color:var(--white);">—</div>
+      <div class="stat-sub" id="st-venue" style="font-size:0.78rem;color:#666;font-weight:500;margin-top:0.5rem;">—</div>
     </div>
     <div class="stat-cell">
       <span class="stat-tag">Last Result</span>
@@ -561,9 +562,7 @@ function buildRoster(doc, playerStats) {
 
   // Load players.csv to get photo mappings via name_gr column
   fetch('players.csv').then(r => r.text()).then(text => {
-    const lines   = text.trim().split(/
-?
-/);
+    const lines   = text.trim().split(/\r?\n/);
     const delim   = lines[0].includes(';') ? ';' : ',';
     const headers = lines[0].split(delim).map(h => h.trim().replace(/^﻿/,''));
     const csvRows = lines.slice(1).map(l => {
@@ -705,11 +704,16 @@ function buildNextGameUI(ng) {
   const datePart = dtParts[0] || ng.dateTime;
   const timePart = dtParts[1] || '';
 
-  // Next Opponent card: name in large mono, time below, date smaller below that
+  // Card 1 — Next Opponent
   $('st-opp').textContent  = ng.oppName;
-  $('st-time').textContent = timePart;
-  $('st-date').textContent = `${datePart} · ${ng.ha}`;
+  $('st-time').textContent = `${ng.ha}`;
+  $('st-date').textContent = datePart;
 
+  // Card 2 — Tip-off (same large mono style, shows time + venue)
+  $('st-tipoff-time').textContent = timePart;
+  $('st-venue').textContent       = ng.venue || '—';
+
+  // Countdown section
   $('cd-opp').textContent   = ng.oppName.toUpperCase();
   $('cd-date').textContent  = ng.dateTime;
   $('cd-ha').textContent    = ng.ha;
