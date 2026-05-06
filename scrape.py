@@ -165,6 +165,12 @@ def parse_results(html):
         score    = row[3].strip()   # "63 - 47"
         ha       = row[4].strip()   # Home / Away
         cat      = row[5].strip() if len(row) > 5 else ""
+        season   = row[6].strip() if len(row) > 6 else ""
+
+        # Filter to current season only
+        if season and season != "25/26":
+            continue
+
         # game link — look for /games/NNNNN in remaining cells
         game_id  = ""
         for cell in row[6:]:
@@ -309,7 +315,7 @@ def main():
     schedule = parse_schedule(schedule_html)
     players  = parse_roster(roster_html)
 
-    print(f"  Parsed: {len(results)} results, {len(schedule)} games, {len(players)} players")
+    print(f"  Parsed: {len(results)} results (25/26 season only), {len(schedule)} games, {len(players)} players")
 
     # Compute summary stats
     valid_results = [r for r in results if r["ts"] > 0 or r["os"] > 0]
