@@ -3,433 +3,237 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Air Ballers 🏀</title>
 <link rel="icon" type="image/png" href="logo_v2.png">
-<link rel="apple-touch-icon" href="logo_v2.png">
-<title>Air Ballers</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Bebas+Neue&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 
 :root {
-  --bg:       #0a0a0a;
-  --bg2:      #0f0f0f;
-  --bg3:      #141414;
-  --panel:    #111111;
-  --border:   #1e1e1e;
-  --border2:  #2a2a2a;
-  --orange:   #FF5C00;
-  --orange2:  #E04E00;
-  --orange-dim: rgba(255,92,0,0.10);
-  --red:      #ff3b3b;
-  --red-dim:  rgba(255,59,59,0.08);
-  --white:    #e8e8e0;
-  --muted:    #444444;
-  --mono:     'Share Tech Mono', monospace;
-  --display:  'Bebas Neue', sans-serif;
-  --ui:       'Rajdhani', sans-serif;
+  --bg:#0a0a0a; --bg2:#0f0f0f; --bg3:#141414; --panel:#111111;
+  --border:#1e1e1e; --border2:#2a2a2a;
+  --orange:#FF5C00; --orange2:#E04E00; --orange-dim:rgba(255,92,0,0.10);
+  --red:#ff3b3b; --red-dim:rgba(255,59,59,0.08);
+  --white:#e8e8e0; --muted:#444444;
+  --mono:'Share Tech Mono',monospace;
+  --display:'Bebas Neue',sans-serif;
+  --ui:'Rajdhani',sans-serif;
 }
 
-html { scroll-behavior: smooth; }
-
+html { scroll-behavior:smooth; }
 body {
-  background: var(--bg);
-  color: var(--white);
-  font-family: var(--ui);
-  min-height: 100vh;
-  overflow-x: hidden;
-  background-image: repeating-linear-gradient(
-    0deg, transparent, transparent 2px,
-    rgba(0,0,0,0.18) 2px, rgba(0,0,0,0.18) 4px
-  );
+  background:var(--bg); color:var(--white); font-family:var(--ui);
+  min-height:100vh; overflow-x:hidden;
+  background-image:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.18) 2px,rgba(0,0,0,0.18) 4px);
 }
 
-/* LOADING SCREEN */
+/* LOADING */
 #loading {
-  position: fixed; inset: 0;
-  background: var(--bg);
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  gap: 1.2rem; z-index: 999;
-  transition: opacity 0.4s ease;
+  position:fixed; inset:0; background:var(--bg);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:1.2rem; z-index:999; transition:opacity 0.4s ease;
 }
-#loading.hidden { opacity: 0; pointer-events: none; }
-
-.load-logo { width: 80px; opacity: 0.8; mix-blend-mode: lighten; }
-
-.load-bar-wrap {
-  width: 200px; height: 2px;
-  background: var(--border2); border-radius: 2px; overflow: hidden;
-}
-.load-bar {
-  height: 100%; width: 0%;
-  background: var(--orange);
-  border-radius: 2px;
-  transition: width 0.3s ease;
-  box-shadow: 0 0 10px rgba(255,92,0,0.5);
-}
-.load-text {
-  font-family: var(--mono); font-size: 0.6rem;
-  letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted);
-}
+#loading.hidden { opacity:0; pointer-events:none; }
+.load-logo { width:80px; mix-blend-mode:lighten; }
+.load-bar-wrap { width:200px; height:2px; background:var(--border2); border-radius:2px; overflow:hidden; }
+.load-bar { height:100%; width:0%; background:var(--orange); border-radius:2px; transition:width 0.3s ease; box-shadow:0 0 10px rgba(255,92,0,0.5); }
+.load-text { font-family:var(--mono); font-size:0.6rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); }
 
 /* TICKER */
-.ticker-wrap {
-  width: 100%; background: var(--orange);
-  overflow: hidden; height: 28px;
-  display: flex; align-items: center;
-  position: relative; z-index: 10;
-}
-.ticker-track {
-  display: flex; white-space: nowrap;
-  animation: ticker 32s linear infinite;
-}
-.ticker-item {
-  font-family: var(--mono); font-size: 0.72rem;
-  color: #000; padding: 0 2rem;
-  letter-spacing: 0.12em; text-transform: uppercase;
-}
-.ticker-sep { color: rgba(0,0,0,0.35); padding: 0 0.5rem; }
-@keyframes ticker {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
+.ticker-wrap { width:100%; background:var(--orange); overflow:hidden; height:28px; display:flex; align-items:center; position:relative; z-index:10; }
+.ticker-track { display:flex; white-space:nowrap; animation:ticker 32s linear infinite; }
+.ticker-item { font-family:var(--mono); font-size:0.72rem; color:#000; padding:0 2rem; letter-spacing:0.12em; text-transform:uppercase; }
+.ticker-sep { color:rgba(0,0,0,0.35); padding:0 0.5rem; }
+@keyframes ticker { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
 
 /* LAYOUT */
-.arena { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem 4rem; }
+.arena { max-width:1200px; margin:0 auto; padding:0 1.5rem 4rem; }
 
 /* HEADER */
 .scoreboard-header {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center; gap: 2rem;
-  padding: 2.5rem 0 2rem;
-  border-bottom: 1px solid var(--border2);
-  position: relative;
+  display:grid; grid-template-columns:1fr auto 1fr;
+  align-items:center; gap:2rem; padding:2.5rem 0 2rem;
+  border-bottom:1px solid var(--border2); position:relative;
 }
 .scoreboard-header::after {
-  content: ''; position: absolute;
-  bottom: -1px; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent, var(--orange), transparent);
-  opacity: 0.4;
+  content:''; position:absolute; bottom:-1px; left:0; right:0; height:1px;
+  background:linear-gradient(90deg,transparent,var(--orange),transparent); opacity:0.4;
 }
-.header-left { display: flex; flex-direction: column; gap: 0.5rem; }
-.league-tag {
-  font-family: var(--mono); font-size: 0.65rem;
-  letter-spacing: 0.2em; color: var(--muted); text-transform: uppercase;
-}
-.team-name-top {
-  font-family: var(--display);
-  font-size: clamp(3rem, 6vw, 5.5rem);
-  color: var(--white); letter-spacing: 0.06em; line-height: 0.9;
-}
-.team-name-bot {
-  font-family: var(--display);
-  font-size: clamp(3rem, 6vw, 5.5rem);
-  color: var(--orange); letter-spacing: 0.06em; line-height: 0.9;
-  text-shadow: 0 0 40px rgba(255,92,0,0.4);
-}
-.season-label {
-  font-family: var(--mono); font-size: 0.7rem;
-  color: var(--muted); letter-spacing: 0.15em; margin-top: 0.5rem;
-}
+.header-left { display:flex; flex-direction:column; gap:0.5rem; }
+.league-tag { font-family:var(--mono); font-size:0.65rem; letter-spacing:0.2em; color:var(--muted); text-transform:uppercase; }
+.team-name-top { font-family:var(--display); font-size:clamp(3rem,6vw,5.5rem); color:var(--white); letter-spacing:0.06em; line-height:0.9; }
+.team-name-bot { font-family:var(--display); font-size:clamp(3rem,6vw,5.5rem); color:var(--orange); letter-spacing:0.06em; line-height:0.9; text-shadow:0 0 40px rgba(255,92,0,0.4); }
+.season-label { font-family:var(--mono); font-size:0.7rem; color:var(--muted); letter-spacing:0.15em; margin-top:0.5rem; }
 
-/* CENTER LOGO */
-.logo-center {
-  display: flex; flex-direction: column;
-  align-items: center; gap: 1rem; position: relative;
-}
-.logo-hex-wrap {
-  position: relative; width: 140px; height: 140px;
-  display: flex; align-items: center; justify-content: center;
-}
-.logo-hex-wrap::before {
-  content: ''; position: absolute; inset: 0;
-  border-radius: 50%; border: 1px solid var(--orange);
-  opacity: 0.3; animation: pulse-ring 3s ease-in-out infinite;
-}
-.logo-hex-wrap::after {
-  content: ''; position: absolute; inset: -12px;
-  border-radius: 50%; border: 1px solid var(--orange);
-  opacity: 0.1; animation: pulse-ring 3s ease-in-out infinite 0.5s;
-}
-@keyframes pulse-ring {
-  0%, 100% { transform: scale(1); opacity: 0.3; }
-  50%       { transform: scale(1.05); opacity: 0.1; }
-}
-.logo-img {
-  width: 120px; height: 120px; object-fit: contain;
-  mix-blend-mode: lighten;
-  filter: drop-shadow(0 0 16px rgba(255,92,0,0.4));
-  position: relative; z-index: 1;
-}
+/* LOGO */
+.logo-center { display:flex; flex-direction:column; align-items:center; gap:1rem; position:relative; }
+.logo-hex-wrap { position:relative; width:140px; height:140px; display:flex; align-items:center; justify-content:center; }
+.logo-hex-wrap::before { content:''; position:absolute; inset:0; border-radius:50%; border:1px solid var(--orange); opacity:0.3; animation:pulse-ring 3s ease-in-out infinite; }
+.logo-hex-wrap::after { content:''; position:absolute; inset:-12px; border-radius:50%; border:1px solid var(--orange); opacity:0.1; animation:pulse-ring 3s ease-in-out infinite 0.5s; }
+@keyframes pulse-ring { 0%,100%{transform:scale(1);opacity:0.3} 50%{transform:scale(1.05);opacity:0.1} }
+.logo-img { width:120px; height:120px; object-fit:contain; mix-blend-mode:lighten; filter:drop-shadow(0 0 16px rgba(255,92,0,0.4)); position:relative; z-index:1; }
 
 /* HEADER RIGHT */
-.header-right {
-  display: flex; flex-direction: column;
-  align-items: flex-end; gap: 0.75rem;
-}
-.record-display { display: flex; align-items: baseline; gap: 0.3rem; }
-.rec-num {
-  font-family: var(--display);
-  font-size: clamp(3rem, 6vw, 5.5rem); line-height: 0.9;
-}
-.rec-num.wins  { color: var(--orange); text-shadow: 0 0 30px rgba(255,92,0,0.4); }
-.rec-num.losses{ color: var(--red); }
-.rec-sep { font-family: var(--display); font-size: 2.5rem; color: var(--muted); line-height: 1; }
-.rec-label {
-  font-family: var(--mono); font-size: 0.65rem;
-  color: var(--muted); letter-spacing: 0.15em; text-transform: uppercase;
-}
-.pct-row { display: flex; align-items: center; gap: 0.5rem; }
-.pct-val { font-family: var(--mono); font-size: 1.1rem; color: var(--orange); letter-spacing: 0.05em; }
-.pct-label { font-family: var(--mono); font-size: 0.6rem; color: var(--muted); letter-spacing: 0.15em; text-transform: uppercase; }
-.streak-chip {
-  display: inline-flex; align-items: center; gap: 0.4rem;
-  border: 1px solid var(--border2); border-radius: 3px;
-  padding: 0.25rem 0.65rem; font-family: var(--mono);
-  font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
-}
-.streak-chip.win  { border-color: var(--orange); color: var(--orange); background: var(--orange-dim); }
-.streak-chip.loss { border-color: var(--red); color: var(--red); background: var(--red-dim); }
-.streak-chip.neutral { color: var(--muted); }
+.header-right { display:flex; flex-direction:column; align-items:flex-end; gap:0.75rem; }
+.record-display { display:flex; align-items:baseline; gap:0.3rem; }
+.rec-num { font-family:var(--display); font-size:clamp(3rem,6vw,5.5rem); line-height:0.9; }
+.rec-num.wins { color:var(--orange); text-shadow:0 0 30px rgba(255,92,0,0.4); }
+.rec-num.losses { color:var(--red); }
+.rec-sep { font-family:var(--display); font-size:2.5rem; color:var(--muted); line-height:1; }
+.rec-label { font-family:var(--mono); font-size:0.65rem; color:var(--muted); letter-spacing:0.15em; text-transform:uppercase; }
+.pct-row { display:flex; align-items:center; gap:0.5rem; }
+.pct-val { font-family:var(--mono); font-size:1.1rem; color:var(--orange); letter-spacing:0.05em; }
+.pct-label { font-family:var(--mono); font-size:0.6rem; color:var(--muted); letter-spacing:0.15em; text-transform:uppercase; }
+.streak-chip { display:inline-flex; align-items:center; gap:0.4rem; border:1px solid var(--border2); border-radius:3px; padding:0.25rem 0.65rem; font-family:var(--mono); font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; }
+.streak-chip.win { border-color:var(--orange); color:var(--orange); background:var(--orange-dim); }
+.streak-chip.loss { border-color:var(--red); color:var(--red); background:var(--red-dim); }
+.streak-chip.neutral { color:var(--muted); }
 
-/* SECTION LABEL */
-.sec-label { display: flex; align-items: center; gap: 1rem; margin: 2.8rem 0 1.2rem; }
-.sec-label-text {
-  font-family: var(--mono); font-size: 0.62rem;
-  letter-spacing: 0.3em; text-transform: uppercase; color: var(--orange);
-  white-space: nowrap; display: flex; align-items: center; gap: 0.5rem;
-}
-.sec-label-text::before { content: '//'; color: var(--muted); }
-.sec-rule { flex: 1; height: 1px; background: var(--border2); }
+/* SECTION */
+.sec-label { display:flex; align-items:center; gap:1rem; margin:2.8rem 0 1.2rem; }
+.sec-label-text { font-family:var(--mono); font-size:0.62rem; letter-spacing:0.3em; text-transform:uppercase; color:var(--orange); white-space:nowrap; display:flex; align-items:center; gap:0.5rem; }
+.sec-label-text::before { content:'//'; color:var(--muted); }
+.sec-rule { flex:1; height:1px; background:var(--border2); }
 
 /* STAT STRIP */
-.stat-strip {
-  display: grid; grid-template-columns: repeat(4, 1fr);
-  gap: 1px; background: var(--border2);
-  border: 1px solid var(--border2); border-radius: 4px; overflow: hidden;
-}
-.stat-cell {
-  background: var(--panel); padding: 1.4rem 1.2rem;
-  position: relative; transition: background 0.2s;
-}
-.stat-cell:hover { background: var(--bg3); }
-.stat-cell::after {
-  content: ''; position: absolute;
-  top: 0; left: 0; right: 0; height: 2px;
-  background: var(--orange); opacity: 0; transition: opacity 0.2s;
-}
-.stat-cell:hover::after { opacity: 0.5; }
-.stat-tag {
-  font-family: var(--mono); font-size: 0.6rem;
-  letter-spacing: 0.2em; text-transform: uppercase;
-  color: var(--muted); margin-bottom: 0.6rem; display: block;
-}
-.stat-val {
-  font-family: var(--display); font-size: 2.2rem;
-  line-height: 1; color: var(--white); letter-spacing: 0.04em;
-}
-.stat-val.orange { color: var(--orange); text-shadow: 0 0 20px rgba(255,92,0,0.3); }
-.stat-val.red    { color: var(--red); }
-.stat-sub { font-family: var(--ui); font-size: 0.78rem; color: var(--muted); margin-top: 0.4rem; font-weight: 500; line-height: 1.4; }
+.stat-strip { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border2); border:1px solid var(--border2); border-radius:4px; overflow:hidden; }
+.stat-cell { background:var(--panel); padding:1.4rem 1.2rem; position:relative; transition:background 0.2s; }
+.stat-cell:hover { background:var(--bg3); }
+.stat-cell::after { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:var(--orange); opacity:0; transition:opacity 0.2s; }
+.stat-cell:hover::after { opacity:0.5; }
+.stat-tag { font-family:var(--mono); font-size:0.6rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); margin-bottom:0.6rem; display:block; }
+.stat-val { font-family:var(--display); font-size:2.2rem; line-height:1; color:var(--white); letter-spacing:0.04em; }
+.stat-val.orange { color:var(--orange); text-shadow:0 0 20px rgba(255,92,0,0.3); }
+.stat-val.red { color:var(--red); }
+.stat-sub { font-family:var(--ui); font-size:0.78rem; color:var(--muted); margin-top:0.4rem; font-weight:500; line-height:1.4; }
 
 /* COUNTDOWN */
-.countdown-board {
-  background: var(--panel); border: 1px solid var(--border2); border-radius: 4px;
-  padding: 2rem 1.5rem; display: grid;
-  grid-template-columns: 1fr auto; gap: 2rem; align-items: center;
-  position: relative; overflow: hidden;
-}
-.countdown-board::before {
-  content: ''; position: absolute;
-  top: 0; left: 0; width: 3px; height: 100%;
-  background: var(--orange); opacity: 0.7;
-}
-.cd-game-info { display: flex; flex-direction: column; gap: 0.4rem; }
-.cd-matchup {
-  font-family: var(--display);
-  font-size: clamp(1.6rem, 3vw, 2.6rem);
-  color: var(--white); letter-spacing: 0.05em; line-height: 1;
-}
-.cd-matchup span { color: var(--orange); }
-.cd-meta { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; margin-top: 0.3rem; }
-.cd-meta-item {
-  font-family: var(--mono); font-size: 0.68rem;
-  letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted);
-  display: flex; align-items: center; gap: 0.3rem;
-}
-.cd-meta-item::before {
-  content: ''; width: 4px; height: 4px;
-  background: var(--orange); border-radius: 50%; display: inline-block;
-}
-.cd-clock { display: flex; align-items: center; gap: 0.5rem; }
-.cd-digit { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; min-width: 64px; }
-.cd-num {
-  font-family: var(--mono); font-size: 2.8rem; line-height: 1;
-  color: var(--orange); text-shadow: 0 0 20px rgba(255,92,0,0.5);
-  letter-spacing: -0.02em; background: var(--bg2);
-  border: 1px solid rgba(255,92,0,0.15); border-radius: 3px;
-  padding: 0.4rem 0.6rem; min-width: 72px; text-align: center;
-}
-.cd-unit { font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
-.cd-colon {
-  font-family: var(--mono); font-size: 2rem; color: var(--muted);
-  margin-bottom: 1.2rem; animation: blink 1s step-end infinite;
-}
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.2; }
-}
+.countdown-board { background:var(--panel); border:1px solid var(--border2); border-radius:4px; padding:2rem 1.5rem; display:grid; grid-template-columns:1fr auto; gap:2rem; align-items:center; position:relative; overflow:hidden; }
+.countdown-board::before { content:''; position:absolute; top:0; left:0; width:3px; height:100%; background:var(--orange); opacity:0.7; }
+.cd-game-info { display:flex; flex-direction:column; gap:0.4rem; }
+.cd-matchup { font-family:var(--display); font-size:clamp(1.6rem,3vw,2.6rem); color:var(--white); letter-spacing:0.05em; line-height:1; }
+.cd-matchup span { color:var(--orange); }
+.cd-meta { display:flex; flex-wrap:wrap; gap:0.5rem 1.5rem; margin-top:0.3rem; }
+.cd-meta-item { font-family:var(--mono); font-size:0.68rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); display:flex; align-items:center; gap:0.3rem; }
+.cd-meta-item::before { content:''; width:4px; height:4px; background:var(--orange); border-radius:50%; display:inline-block; }
+.cd-clock { display:flex; align-items:center; gap:0.5rem; }
+.cd-digit { display:flex; flex-direction:column; align-items:center; gap:0.25rem; }
+.cd-num { font-family:var(--mono); font-size:2.8rem; line-height:1; color:var(--orange); text-shadow:0 0 20px rgba(255,92,0,0.5); background:var(--bg2); border:1px solid rgba(255,92,0,0.15); border-radius:3px; padding:0.4rem 0.6rem; min-width:72px; text-align:center; }
+.cd-unit { font-family:var(--mono); font-size:0.55rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); }
+.cd-colon { font-family:var(--mono); font-size:2rem; color:var(--muted); margin-bottom:1.2rem; animation:blink 1s step-end infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
 
 /* RESULTS TABLE */
-.results-board {
-  background: var(--panel); border: 1px solid var(--border2);
-  border-radius: 4px; overflow: hidden;
-}
-.results-board table { width: 100%; border-collapse: collapse; }
-.results-board thead tr { background: var(--bg2); border-bottom: 1px solid var(--border2); }
-.results-board th {
-  font-family: var(--mono); font-size: 0.58rem;
-  letter-spacing: 0.2em; text-transform: uppercase;
-  color: var(--muted); padding: 0.75rem 1rem; text-align: left; font-weight: 400;
-}
-.results-board td {
-  padding: 0.9rem 1rem; border-bottom: 1px solid var(--border);
-  font-family: var(--ui); font-size: 0.92rem; font-weight: 500;
-  color: var(--white); vertical-align: middle;
-}
-.results-board tr:last-child td { border-bottom: none; }
-.results-board tr.row-odd { background: rgba(255,255,255,0.015); }
-.results-board tr:hover td { background: rgba(255,92,0,0.03); }
-.td-date  { font-family: var(--mono) !important; font-size: 0.75rem !important; color: var(--muted) !important; white-space: nowrap; }
-.td-opp   { font-weight: 600 !important; letter-spacing: 0.02em; }
-.td-score { font-family: var(--mono) !important; font-size: 1rem !important; letter-spacing: 0.05em; white-space: nowrap; }
-.td-res   {
-  font-family: var(--mono) !important; font-size: 0.7rem !important;
-  letter-spacing: 0.15em; padding: 0.25rem 0.55rem;
-  border-radius: 2px; display: inline-block; font-weight: 700 !important;
-}
-.res-w { color: var(--orange) !important; background: var(--orange-dim); border: 1px solid rgba(255,92,0,0.2); }
-.res-l { color: var(--red) !important; background: var(--red-dim); border: 1px solid rgba(255,59,59,0.2); }
-.watch-link {
-  font-family: var(--mono); font-size: 0.65rem; color: var(--muted);
-  text-decoration: none; letter-spacing: 0.1em;
-  padding: 0.2rem 0.5rem; border: 1px solid var(--border2); border-radius: 2px; transition: all 0.15s;
-}
-.watch-link:hover { color: var(--orange); border-color: var(--orange); background: var(--orange-dim); }
-.no-vid { color: var(--border2); font-family: var(--mono); font-size: 0.7rem; }
+.results-board { background:var(--panel); border:1px solid var(--border2); border-radius:4px; overflow:hidden; }
+.results-board table { width:100%; border-collapse:collapse; }
+.results-board thead tr { background:var(--bg2); border-bottom:1px solid var(--border2); }
+.results-board th { font-family:var(--mono); font-size:0.58rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); padding:0.75rem 1rem; text-align:left; font-weight:400; }
+.results-board td { padding:0.9rem 1rem; border-bottom:1px solid var(--border); font-family:var(--ui); font-size:0.92rem; font-weight:500; color:var(--white); vertical-align:middle; }
+.results-board tr:last-child td { border-bottom:none; }
+.results-board tr.row-odd { background:rgba(255,255,255,0.015); }
+.results-board tr:hover td { background:rgba(255,92,0,0.03); }
+.td-date { font-family:var(--mono) !important; font-size:0.75rem !important; color:var(--muted) !important; white-space:nowrap; }
+.td-opp { font-weight:600 !important; }
+.td-opp-logo { width:24px; height:24px; border-radius:50%; object-fit:contain; vertical-align:middle; margin-right:0.5rem; background:var(--bg2); }
+.td-score { font-family:var(--mono) !important; font-size:1rem !important; letter-spacing:0.05em; white-space:nowrap; }
+.td-res { font-family:var(--mono) !important; font-size:0.7rem !important; letter-spacing:0.15em; padding:0.25rem 0.55rem !important; border-radius:2px; display:inline-block; font-weight:700 !important; }
+.res-w { color:var(--orange) !important; background:var(--orange-dim); border:1px solid rgba(255,92,0,0.2); }
+.res-l { color:var(--red) !important; background:var(--red-dim); border:1px solid rgba(255,59,59,0.2); }
+.td-cat { font-family:var(--mono) !important; font-size:0.62rem !important; color:var(--muted) !important; }
+.game-link { font-family:var(--mono); font-size:0.65rem; color:var(--muted); text-decoration:none; letter-spacing:0.1em; padding:0.2rem 0.5rem; border:1px solid var(--border2); border-radius:2px; transition:all 0.15s; }
+.game-link:hover { color:var(--orange); border-color:var(--orange); background:var(--orange-dim); }
 
-/* ROSTER GRID */
-.roster-grid {
-  display: grid; grid-template-columns: repeat(6, 1fr);
-  gap: 1px; background: var(--border2);
-  border: 1px solid var(--border2); border-radius: 4px; overflow: hidden;
-}
-.player-tile {
-  background: var(--panel); padding: 1.2rem 0.75rem 1rem;
-  display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
-  cursor: default; transition: background 0.15s; position: relative;
-}
-.player-tile:hover { background: var(--bg3); z-index: 1; }
-.player-tile:hover .p-avatar { border-color: var(--orange); color: var(--orange); text-shadow: 0 0 16px rgba(255,92,0,0.5); }
-.player-tile:hover .p-number { color: var(--orange); }
-.p-number { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.1em; color: var(--muted); transition: color 0.15s; }
-.p-avatar {
-  width: 60px; height: 60px; border-radius: 50%;
-  border: 1px solid var(--border2); background: var(--bg2);
-  display: flex; align-items: center; justify-content: center;
-  font-family: var(--display); font-size: 1.3rem; color: var(--white);
-  transition: border-color 0.15s, color 0.15s, text-shadow 0.15s;
-  letter-spacing: 0.05em; overflow: hidden;
-}
-.p-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
-.p-name  { font-family: var(--display); font-size: 0.82rem; letter-spacing: 0.06em; color: var(--white); text-align: center; line-height: 1.1; margin-top: 0.1rem; }
-.p-pos   { font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.15em; color: var(--muted); text-align: center; }
+/* SCHEDULE TABLE */
+.schedule-board { background:var(--panel); border:1px solid var(--border2); border-radius:4px; overflow:hidden; }
+.schedule-board table { width:100%; border-collapse:collapse; }
+.schedule-board thead tr { background:var(--bg2); border-bottom:1px solid var(--border2); }
+.schedule-board th { font-family:var(--mono); font-size:0.58rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); padding:0.75rem 1rem; text-align:left; font-weight:400; }
+.schedule-board td { padding:0.9rem 1rem; border-bottom:1px solid var(--border); font-family:var(--ui); font-size:0.92rem; font-weight:500; color:var(--white); vertical-align:middle; }
+.schedule-board tr:last-child td { border-bottom:none; }
+.schedule-board tr.row-odd { background:rgba(255,255,255,0.015); }
+.schedule-board tr.next-game-row td { background:rgba(255,92,0,0.06); border-left:3px solid var(--orange); }
+.schedule-board tr:hover td { background:rgba(255,92,0,0.03); }
+
+/* ROSTER */
+.roster-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:1px; background:var(--border2); border:1px solid var(--border2); border-radius:4px; overflow:hidden; }
+.player-tile { background:var(--panel); padding:1.2rem 0.75rem 1rem; display:flex; flex-direction:column; align-items:center; gap:0.4rem; cursor:default; transition:background 0.15s; position:relative; }
+.player-tile:hover { background:var(--bg3); z-index:1; }
+.player-tile:hover .p-avatar { border-color:var(--orange); color:var(--orange); text-shadow:0 0 16px rgba(255,92,0,0.5); }
+.player-tile:hover .p-number { color:var(--orange); }
+.p-number { font-family:var(--mono); font-size:0.62rem; letter-spacing:0.1em; color:var(--muted); transition:color 0.15s; }
+.p-avatar { width:60px; height:60px; border-radius:50%; border:1px solid var(--border2); background:var(--bg2); display:flex; align-items:center; justify-content:center; font-family:var(--display); font-size:1.3rem; color:var(--white); transition:border-color 0.15s,color 0.15s,text-shadow 0.15s; overflow:hidden; }
+.p-avatar img { width:100%; height:100%; object-fit:cover; border-radius:50%; }
+.p-name { font-family:var(--display); font-size:0.82rem; letter-spacing:0.06em; color:var(--white); text-align:center; line-height:1.1; margin-top:0.1rem; }
+.p-pos { font-family:var(--mono); font-size:0.55rem; letter-spacing:0.15em; color:var(--muted); text-align:center; }
 
 /* FOOTER */
-.arena-footer {
-  margin-top: 4rem; padding-top: 1.5rem;
-  border-top: 1px solid var(--border2);
-  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
-}
-.footer-left { display: flex; align-items: center; gap: 1rem; }
-.footer-dot {
-  width: 6px; height: 6px; border-radius: 50%; background: var(--orange);
-  animation: pulse-dot 2s ease-in-out infinite;
-}
-@keyframes pulse-dot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50%       { opacity: 0.4; transform: scale(0.7); }
-}
-.footer-text { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
-.footer-right { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.12em; color: var(--border2); text-transform: uppercase; }
+.arena-footer { margin-top:4rem; padding-top:1.5rem; border-top:1px solid var(--border2); display:flex; align-items:center; justify-content:space-between; gap:1rem; }
+.footer-left { display:flex; align-items:center; gap:1rem; }
+.footer-dot { width:6px; height:6px; border-radius:50%; background:var(--orange); animation:pulse-dot 2s ease-in-out infinite; }
+@keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.7)} }
+.footer-text { font-family:var(--mono); font-size:0.62rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); }
+.footer-right { font-family:var(--mono); font-size:0.6rem; letter-spacing:0.12em; color:var(--border2); text-transform:uppercase; }
+
+/* ERROR */
+.error-box { background:var(--panel); border:1px solid var(--red); border-radius:4px; padding:1.5rem; text-align:center; font-family:var(--mono); font-size:0.72rem; color:var(--red); letter-spacing:0.1em; }
 
 /* ANIMATIONS */
-@keyframes fade-up {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-.scoreboard-header { animation: fade-up 0.5s ease both; }
-.stat-strip        { animation: fade-up 0.5s ease 0.15s both; }
-.countdown-board   { animation: fade-up 0.5s ease 0.25s both; }
-.results-board     { animation: fade-up 0.5s ease 0.35s both; }
-.roster-grid       { animation: fade-up 0.5s ease 0.45s both; }
-.arena-footer      { animation: fade-up 0.5s ease 0.55s both; }
+@keyframes fade-up { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+.scoreboard-header { animation:fade-up 0.5s ease both; }
+.stat-strip        { animation:fade-up 0.5s ease 0.15s both; }
+.countdown-board   { animation:fade-up 0.5s ease 0.25s both; }
+.results-board     { animation:fade-up 0.5s ease 0.35s both; }
+.schedule-board    { animation:fade-up 0.5s ease 0.40s both; }
+.roster-grid       { animation:fade-up 0.5s ease 0.45s both; }
+.arena-footer      { animation:fade-up 0.5s ease 0.55s both; }
 
 /* RESPONSIVE */
 @media(max-width:900px) {
-  .scoreboard-header { grid-template-columns: 1fr 1fr; }
-  .logo-center { display: none; }
-  .stat-strip { grid-template-columns: repeat(2,1fr); }
-  .roster-grid { grid-template-columns: repeat(4,1fr); }
-  .countdown-board { grid-template-columns: 1fr; }
-  .cd-clock { justify-content: flex-start; }
+  .scoreboard-header { grid-template-columns:1fr 1fr; }
+  .logo-center { display:none; }
+  .stat-strip { grid-template-columns:repeat(2,1fr); }
+  .roster-grid { grid-template-columns:repeat(4,1fr); }
+  .countdown-board { grid-template-columns:1fr; }
+  .cd-clock { justify-content:flex-start; }
 }
 @media(max-width:600px) {
-  .scoreboard-header { grid-template-columns: 1fr; }
-  .header-right { align-items: flex-start; }
-  .stat-strip { grid-template-columns: repeat(2,1fr); }
-  .roster-grid { grid-template-columns: repeat(3,1fr); }
+  .scoreboard-header { grid-template-columns:1fr; }
+  .header-right { align-items:flex-start; }
+  .stat-strip { grid-template-columns:repeat(2,1fr); }
+  .roster-grid { grid-template-columns:repeat(3,1fr); }
 }
-@media(max-width:420px) {
-  .roster-grid { grid-template-columns: repeat(2,1fr); }
-}
+@media(max-width:420px) { .roster-grid { grid-template-columns:repeat(2,1fr); } }
 </style>
 </head>
 <body>
 
-<!-- LOADING SCREEN -->
+<!-- LOADING -->
 <div id="loading">
   <img src="logo_v2.png" alt="Air Ballers" class="load-logo">
   <div class="load-bar-wrap"><div class="load-bar" id="load-bar"></div></div>
-  <div class="load-text" id="load-text">Loading roster...</div>
+  <div class="load-text" id="load-text">Connecting to Basketaki...</div>
 </div>
 
-<!-- TICKER (populated by JS) -->
-<div class="ticker-wrap">
-  <div class="ticker-track" id="ticker-track"></div>
-</div>
+<!-- TICKER -->
+<div class="ticker-wrap"><div class="ticker-track" id="ticker-track">
+  <span class="ticker-item">AIR BALLERS <span class="ticker-sep">·</span> LOADING DATA...</span>
+</div></div>
 
 <div class="arena">
 
   <!-- HEADER -->
   <header class="scoreboard-header">
     <div class="header-left">
-      <span class="league-tag">// Thessaloniki Basketaki League</span>
-      <div>
-        <div class="team-name-top">AIR</div>
-        <div class="team-name-bot">BALLERS</div>
-      </div>
+      <span class="league-tag">// Thessaloniki Amateur League</span>
+      <div><div class="team-name-top">AIR</div><div class="team-name-bot">BALLERS</div></div>
       <span class="season-label">2025 – 26 Season</span>
     </div>
-
     <div class="logo-center">
       <div class="logo-hex-wrap">
         <img src="logo_v2.png" alt="Air Ballers" class="logo-img">
       </div>
     </div>
-
     <div class="header-right">
       <span class="rec-label">Season Record</span>
       <div class="record-display">
@@ -447,18 +251,17 @@ body {
 
   <!-- STAT STRIP -->
   <div class="sec-label" style="margin-top:2rem;">
-    <span class="sec-label-text">Season Stats</span>
-    <div class="sec-rule"></div>
+    <span class="sec-label-text">Season Stats</span><div class="sec-rule"></div>
   </div>
   <div class="stat-strip">
     <div class="stat-cell">
       <span class="stat-tag">Next Opponent</span>
-      <div class="stat-val" id="st-opp" style="font-size:1.5rem; font-family:var(--display); letter-spacing:0.04em;">—</div>
+      <div class="stat-val" id="st-opp" style="font-size:1.5rem;font-family:var(--display);letter-spacing:0.04em;">—</div>
       <div class="stat-sub" id="st-venue">—</div>
     </div>
     <div class="stat-cell">
       <span class="stat-tag">Tip-off</span>
-      <div class="stat-val" id="st-time" style="font-size:1.4rem; font-family:var(--mono);">—</div>
+      <div class="stat-val" id="st-time" style="font-size:1.4rem;font-family:var(--mono);">—</div>
       <div class="stat-sub" id="st-date">—</div>
     </div>
     <div class="stat-cell">
@@ -475,8 +278,7 @@ body {
 
   <!-- COUNTDOWN -->
   <div class="sec-label">
-    <span class="sec-label-text">Tip-off Countdown</span>
-    <div class="sec-rule"></div>
+    <span class="sec-label-text">Tip-off Countdown</span><div class="sec-rule"></div>
   </div>
   <div class="countdown-board">
     <div class="cd-game-info">
@@ -498,253 +300,328 @@ body {
 
   <!-- RESULTS -->
   <div class="sec-label">
-    <span class="sec-label-text">Game Log</span>
-    <div class="sec-rule"></div>
+    <span class="sec-label-text">Game Log</span><div class="sec-rule"></div>
   </div>
   <div class="results-board">
     <table>
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Opponent</th>
-          <th>Score</th>
-          <th>Result</th>
-          <th>Video</th>
-        </tr>
-      </thead>
-      <tbody id="results-body">
-        <tr><td colspan="5" style="text-align:center;color:var(--muted);font-family:var(--mono);font-size:0.7rem;padding:2rem;">Loading game log...</td></tr>
-      </tbody>
+      <thead><tr><th>Date</th><th>Opponent</th><th>Score</th><th>Result</th><th>Category</th><th>Game</th></tr></thead>
+      <tbody id="results-body"><tr><td colspan="6" style="text-align:center;color:var(--muted);font-family:var(--mono);font-size:0.7rem;padding:2rem;">Loading game log from Basketaki...</td></tr></tbody>
+    </table>
+  </div>
+
+  <!-- SCHEDULE -->
+  <div class="sec-label">
+    <span class="sec-label-text">Upcoming Schedule</span><div class="sec-rule"></div>
+  </div>
+  <div class="schedule-board">
+    <table>
+      <thead><tr><th>Date</th><th>Time</th><th>Opponent</th><th>Home/Away</th><th>Category</th></tr></thead>
+      <tbody id="schedule-body"><tr><td colspan="5" style="text-align:center;color:var(--muted);font-family:var(--mono);font-size:0.7rem;padding:2rem;">Loading schedule from Basketaki...</td></tr></tbody>
     </table>
   </div>
 
   <!-- ROSTER -->
   <div class="sec-label">
-    <span class="sec-label-text" id="roster-label">Active Roster</span>
-    <div class="sec-rule"></div>
+    <span class="sec-label-text" id="roster-label">Active Roster</span><div class="sec-rule"></div>
   </div>
   <div class="roster-grid" id="roster-grid">
-    <div style="grid-column:1/-1;text-align:center;color:var(--muted);font-family:var(--mono);font-size:0.7rem;padding:2rem;background:var(--panel);">Loading roster...</div>
+    <div style="grid-column:1/-1;text-align:center;color:var(--muted);font-family:var(--mono);font-size:0.7rem;padding:2rem;background:var(--panel);">Loading roster from Basketaki...</div>
   </div>
 
-  <!-- FOOTER -->
   <footer class="arena-footer">
     <div class="footer-left">
       <div class="footer-dot"></div>
       <span class="footer-text">Air Ballers · Thessaloniki · 2025–26</span>
     </div>
-    <span class="footer-right">Thessaloniki Amateur League</span>
+    <span class="footer-right">Live data from Basketaki.com</span>
   </footer>
 
 </div>
 
 <script>
-// ─── CSV PARSER ───────────────────────────────────────────────────────────────
-function parseCSV(text) {
-  const lines = text.trim().split(/\r?\n/);
-  if (lines.length < 2) return [];
-  // detect delimiter
-  const delim = lines[0].includes(';') ? ';' : ',';
-  const headers = lines[0].split(delim).map(h => h.trim().replace(/^\uFEFF/, ''));
-  return lines.slice(1).map(line => {
-    const vals = line.split(delim).map(v => v.trim());
-    const obj = {};
-    headers.forEach((h, i) => obj[h] = vals[i] || '');
-    return obj;
-  }).filter(row => Object.values(row).some(v => v));
-}
+const PROXY   = 'https://api.codetabs.com/v1/proxy?quest=';
+const TEAM    = 'air-ballers';
+const BASE    = 'https://www.basketaki.com';
+const CDN     = 'https://basketaki-web.b-cdn.net';
 
-// ─── DATE PARSING ─────────────────────────────────────────────────────────────
-function parseGameDate(dateStr, timeStr) {
-  const formats = [
-    { re: /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/, fn: m => new Date(+m[3], +m[2]-1, +m[1]) },
-    { re: /^(\d{4})-(\d{2})-(\d{2})$/, fn: m => new Date(+m[1], +m[2]-1, +m[3]) },
-  ];
-  let d = null;
-  for (const f of formats) {
-    const m = dateStr.trim().match(f.re);
-    if (m) { d = f.fn(m); break; }
-  }
-  if (!d) return null;
-  const [h, min] = (timeStr || '').split(':').map(Number);
-  if (!isNaN(h)) { d.setHours(h); d.setMinutes(min || 0); }
-  return d;
-}
-
-function fmtShortDate(dateStr) {
-  const d = parseGameDate(dateStr, '00:00');
-  if (!d) return dateStr;
-  return d.toLocaleDateString('el-GR', { day:'2-digit', month:'2-digit' }).replace('/', '.');
-}
-
-function fmtFullDate(dateStr, timeStr) {
-  const d = parseGameDate(dateStr, timeStr || '00:00');
-  if (!d) return dateStr;
-  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-  return `${days[d.getDay()]}, ${String(d.getDate()).padStart(2,'0')} ${months[d.getMonth()]} ${d.getFullYear()} — ${timeStr || ''}`;
-}
-
-// ─── PROGRESS LOADER ──────────────────────────────────────────────────────────
+// ── helpers ──────────────────────────────────────────────────────────────────
 function setProgress(pct, text) {
   document.getElementById('load-bar').style.width = pct + '%';
   document.getElementById('load-text').textContent = text;
 }
-
 function hideLoader() {
   const el = document.getElementById('loading');
   el.classList.add('hidden');
   setTimeout(() => el.remove(), 500);
 }
-
-// ─── MAIN ─────────────────────────────────────────────────────────────────────
-async function init() {
-  try {
-    setProgress(10, 'Fetching schedule...');
-    const [ngRes, resRes, plRes] = await Promise.all([
-      fetch('next_game.csv'),
-      fetch('results.csv'),
-      fetch('players.csv'),
-    ]);
-    setProgress(50, 'Parsing data...');
-    const [ngText, resText, plText] = await Promise.all([
-      ngRes.text(), resRes.text(), plRes.text()
-    ]);
-    const ngRows  = parseCSV(ngText);
-    const resRows = parseCSV(resText);
-    const plRows  = parseCSV(plText);
-
-    setProgress(70, 'Building game log...');
-    buildResults(resRows);
-
-    setProgress(85, 'Loading roster...');
-    buildRoster(plRows);
-
-    setProgress(95, 'Setting up scoreboard...');
-    buildHeader(resRows);
-    buildNextGame(ngRows);
-    buildTicker(ngRows, resRows);
-
-    setProgress(100, 'Ready!');
-    setTimeout(hideLoader, 400);
-  } catch(e) {
-    console.error(e);
-    document.getElementById('load-text').textContent = 'Error loading data — check console';
-  }
+function proxyFetch(url) {
+  return fetch(PROXY + encodeURIComponent(url)).then(r => {
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.text();
+  });
+}
+function parseHTML(html) {
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  return doc;
 }
 
-// ─── RESULTS ──────────────────────────────────────────────────────────────────
-function buildResults(rows) {
-  // sort newest first by date
-  const sorted = rows.slice().sort((a, b) => {
-    const da = parseGameDate(a.date || a.Date, '00:00');
-    const db = parseGameDate(b.date || b.Date, '00:00');
-    return (db || 0) - (da || 0);
-  });
+// ── results ──────────────────────────────────────────────────────────────────
+function buildResults(doc) {
+  const rows = doc.querySelectorAll('table.team-result tbody tr');
+  if (!rows.length) {
+    document.getElementById('results-body').innerHTML =
+      '<tr><td colspan="6" style="text-align:center;color:var(--muted);font-family:var(--mono);font-size:0.7rem;padding:2rem;">No results found</td></tr>';
+    return [];
+  }
 
+  const results = [];
   let html = '';
-  sorted.forEach((r, i) => {
-    const ts  = parseInt(r.team_score || r.TeamScore || 0);
-    const os  = parseInt(r.opponent_score || r.OpponentScore || 0);
-    const win = ts > os;
-    const opp = r.opponent || r.Opponent || '—';
-    const dateShort = fmtShortDate(r.date || r.Date || '');
-    const score = `${ts}–${os}`;
-    const url   = (r.youtube_url || r.YoutubeUrl || '').trim().replace(/&$/, '');
-    const watch = url
-      ? `<a href="${url}" target="_blank" rel="noopener" class="watch-link">▶ VID</a>`
-      : '<span class="no-vid">—</span>';
-    const odd = i % 2 === 0 ? 'row-odd' : '';
-    html += `
-    <tr class="${odd}">
-      <td class="td-date">${dateShort}</td>
-      <td class="td-opp">vs ${opp}</td>
-      <td class="td-score">${score}</td>
+
+  rows.forEach((tr, i) => {
+    const tds   = tr.querySelectorAll('td');
+    if (tds.length < 5) return;
+
+    const date    = (tds[0].textContent || '').trim();
+    const oppName = (tds[1].querySelector('.team-meta__name a') || {}).textContent || (tds[1].textContent || '').trim();
+    const oppSlug = ((tds[1].querySelector('a') || {}).href || '').replace(/.*\/teams\/([^/]+)\/.*/, '$1');
+    const oppLogo = oppSlug ? `${CDN}/teams/${oppSlug}.png` : '';
+    const winLoss = (tds[2].textContent || '').trim();   // W or L
+    const score   = (tds[3].textContent || '').trim();   // e.g. "63 - 47"
+    const status  = (tds[4].textContent || '').trim();   // Home / Away
+    const cat     = tds[5] ? (tds[5].textContent || '').trim() : '';
+    const gameHref= tds[7] ? (tds[7].querySelector('a') || {}).href || '' : '';
+    const gameId  = gameHref.replace(/.*\/games\/(\d+)/, '$1');
+
+    // normalise score so our team's score is first
+    let ts = '—', os = '—';
+    const m = score.match(/(\d+)\s*-\s*(\d+)/);
+    if (m) {
+      if (status.toLowerCase().includes('home')) { ts = m[1]; os = m[2]; }
+      else                                        { ts = m[2]; os = m[1]; }
+    }
+
+    const win     = winLoss === 'W';
+    const scoreDisplay = ts !== '—' ? `${ts}–${os}` : score;
+    const odd     = i % 2 === 0 ? 'row-odd' : '';
+    const logoImg = oppLogo ? `<img src="${oppLogo}" class="td-opp-logo" alt="" onerror="this.style.display='none'">` : '';
+    const gameLink= gameId  ? `<a href="${BASE}/games/${gameId}" target="_blank" rel="noopener" class="game-link">▶ Preview</a>` : '—';
+
+    results.push({ date, oppName, ts: parseInt(ts)||0, os: parseInt(os)||0, win, status });
+
+    html += `<tr class="${odd}">
+      <td class="td-date">${date}</td>
+      <td class="td-opp">${logoImg}${oppName}</td>
+      <td class="td-score">${scoreDisplay}</td>
       <td class="td-res"><span class="${win ? 'res-w' : 'res-l'}">${win ? 'WIN' : 'LOSS'}</span></td>
-      <td class="td-vid">${watch}</td>
+      <td class="td-cat">${cat}</td>
+      <td>${gameLink}</td>
     </tr>`;
   });
-  document.getElementById('results-body').innerHTML = html || '<tr><td colspan="5" style="text-align:center;color:var(--muted);font-family:var(--mono);font-size:0.7rem;padding:2rem;">No results yet</td></tr>';
+
+  document.getElementById('results-body').innerHTML = html;
+  return results;
 }
 
-// ─── HEADER STATS ─────────────────────────────────────────────────────────────
-function buildHeader(rows) {
-  const wins   = rows.filter(r => parseInt(r.team_score||0) > parseInt(r.opponent_score||0)).length;
-  const losses = rows.length - wins;
-  const pct    = rows.length ? Math.round(wins / rows.length * 100) + '%' : '—';
+// ── schedule ─────────────────────────────────────────────────────────────────
+function buildSchedule(doc) {
+  // Try the schedule table — Basketaki uses a similar structure
+  const rows = doc.querySelectorAll('table tbody tr');
+  if (!rows.length) {
+    document.getElementById('schedule-body').innerHTML =
+      '<tr><td colspan="5" style="text-align:center;color:var(--muted);font-family:var(--mono);font-size:0.7rem;padding:2rem;">No upcoming games found</td></tr>';
+    return null;
+  }
+
+  let html = '';
+  let nextGame = null;
+  const now = new Date();
+
+  rows.forEach((tr, i) => {
+    const tds = tr.querySelectorAll('td');
+    if (tds.length < 3) return;
+
+    const date    = (tds[0].textContent || '').trim();
+    const time    = (tds[1].textContent || '').trim();
+    const oppName = (tds[2].querySelector('.team-meta__name a') || {}).textContent || (tds[2].textContent || '').trim();
+    const oppSlug = ((tds[2].querySelector('a') || {}).href || '').replace(/.*\/teams\/([^/]+)\/.*/, '$1');
+    const oppLogo = oppSlug ? `${CDN}/teams/${oppSlug}.png` : '';
+    const status  = tds[3] ? (tds[3].textContent || '').trim() : '';
+    const cat     = tds[4] ? (tds[4].textContent || '').trim() : '';
+
+    // Parse date for countdown
+    let gameDate = null;
+    const dm = date.match(/(\d{2})\/(\d{2})\/(\d{4})/);
+    if (dm) {
+      const tm = time.match(/(\d{1,2}):(\d{2})/);
+      const h  = tm ? parseInt(tm[1]) : 0;
+      const mn = tm ? parseInt(tm[2]) : 0;
+      gameDate = new Date(parseInt(dm[3]), parseInt(dm[2])-1, parseInt(dm[1]), h, mn);
+    }
+
+    const isFuture  = gameDate && gameDate > now;
+    const isNext    = isFuture && !nextGame;
+    if (isNext) nextGame = { date, time, oppName, status, gameDate };
+
+    const odd     = i % 2 === 0 ? 'row-odd' : '';
+    const rowCls  = isNext ? 'next-game-row' : odd;
+    const logoImg = oppLogo ? `<img src="${oppLogo}" class="td-opp-logo" alt="" onerror="this.style.display='none'">` : '';
+
+    html += `<tr class="${rowCls}">
+      <td class="td-date">${date}${isNext ? ' ◀ NEXT' : ''}</td>
+      <td class="td-date">${time}</td>
+      <td class="td-opp">${logoImg}${oppName}</td>
+      <td class="td-cat">${status}</td>
+      <td class="td-cat">${cat}</td>
+    </tr>`;
+  });
+
+  document.getElementById('schedule-body').innerHTML = html ||
+    '<tr><td colspan="5" style="text-align:center;color:var(--muted);font-family:var(--mono);font-size:0.7rem;padding:2rem;">No upcoming games found</td></tr>';
+
+  return nextGame;
+}
+
+// ── roster ───────────────────────────────────────────────────────────────────
+function buildRoster(doc) {
+  // Basketaki roster page has player cards
+  const players = doc.querySelectorAll('.player, .roster-player, .team-members__item, .widget-player, tr');
+  let html = '';
+  let count = 0;
+
+  // Try table rows first (common pattern on Basketaki)
+  const tableRows = doc.querySelectorAll('table tbody tr');
+  tableRows.forEach(tr => {
+    const tds = tr.querySelectorAll('td');
+    if (tds.length < 2) return;
+    const nameEl  = tr.querySelector('a') || tds[0];
+    const name    = (nameEl.textContent || '').trim();
+    if (!name || name.length < 2) return;
+    const number  = tds.length > 2 ? (tds[0].textContent || '').trim() : '';
+    const pos     = tds.length > 3 ? (tds[tds.length-1].textContent || '').trim() : '';
+    const parts   = name.split(' ');
+    const ini     = parts.slice(0,2).map(w => w[0]||'').join('').toUpperCase();
+    const lastName= (parts[parts.length-1]||name).toUpperCase();
+    html += `<div class="player-tile">
+      <div class="p-number">${number ? '#'+number : ''}</div>
+      <div class="p-avatar">${ini}</div>
+      <div class="p-name">${lastName}</div>
+      <div class="p-pos">${pos}</div>
+    </div>`;
+    count++;
+  });
+
+  if (!count) {
+    // Fallback: use local players.csv data
+    html = '<div style="grid-column:1/-1;text-align:center;color:var(--muted);font-family:var(--mono);font-size:0.7rem;padding:2rem;background:var(--panel);">Loading roster from local data...</div>';
+    loadLocalRoster();
+    return;
+  }
+
+  document.getElementById('roster-label').textContent = `Active Roster — ${count} Players`;
+  document.getElementById('roster-grid').innerHTML = html;
+}
+
+function loadLocalRoster() {
+  fetch('players.csv').then(r => r.text()).then(text => {
+    const lines = text.trim().split(/\r?\n/);
+    const delim = lines[0].includes(';') ? ';' : ',';
+    const headers = lines[0].split(delim).map(h => h.trim().replace(/^\uFEFF/,''));
+    const rows = lines.slice(1).map(l => {
+      const v = l.split(delim).map(x => x.trim());
+      const o = {}; headers.forEach((h,i) => o[h] = v[i]||''); return o;
+    }).filter(r => r.name || r.Name);
+
+    let html = '';
+    rows.forEach(p => {
+      const name   = (p.name||p.Name||'').trim();
+      const number = (p.number||p.Number||'').trim();
+      const pos    = (p.position||p.Position||'').trim();
+      const photo  = (p.photo||p.Photo||'').trim();
+      const parts  = name.split(' ');
+      const ini    = parts.slice(0,2).map(w=>w[0]||'').join('').toUpperCase();
+      const last   = (parts[parts.length-1]||name).toUpperCase();
+      const avatar = photo
+        ? `<img src="images/${photo}" alt="${name}" onerror="this.parentElement.innerHTML='${ini}'">`
+        : ini;
+      html += `<div class="player-tile">
+        <div class="p-number">#${number}</div>
+        <div class="p-avatar">${avatar}</div>
+        <div class="p-name">${last}</div>
+        <div class="p-pos">${pos.toUpperCase()}</div>
+      </div>`;
+    });
+    document.getElementById('roster-label').textContent = `Active Roster — ${rows.length} Players`;
+    document.getElementById('roster-grid').innerHTML = html ||
+      '<div style="grid-column:1/-1;text-align:center;color:var(--muted);font-family:var(--mono);font-size:0.7rem;padding:2rem;background:var(--panel);">No players found</div>';
+  }).catch(() => {
+    document.getElementById('roster-grid').innerHTML =
+      '<div style="grid-column:1/-1;text-align:center;color:var(--muted);font-family:var(--mono);font-size:0.7rem;padding:2rem;background:var(--panel);">Could not load roster</div>';
+  });
+}
+
+// ── header stats ─────────────────────────────────────────────────────────────
+function buildHeader(results) {
+  const seasonResults = results.filter(r => r.ts > 0 || r.os > 0);
+  const wins   = seasonResults.filter(r => r.win).length;
+  const losses = seasonResults.length - wins;
+  const pct    = seasonResults.length ? Math.round(wins / seasonResults.length * 100) + '%' : '—';
 
   document.getElementById('hdr-wins').textContent   = wins;
   document.getElementById('hdr-losses').textContent = losses;
   document.getElementById('hdr-pct').textContent    = pct;
 
   // streak
-  const sorted = rows.slice().sort((a,b) => {
-    const da = parseGameDate(a.date||'', '00:00');
-    const db = parseGameDate(b.date||'', '00:00');
-    return (db||0)-(da||0);
-  });
   let streakCount = 0, streakType = 'neutral';
-  if (sorted.length) {
-    const first = parseInt(sorted[0].team_score||0) > parseInt(sorted[0].opponent_score||0) ? 'win' : 'loss';
+  if (results.length) {
+    const first = results[0].win ? 'win' : 'loss';
     streakType = first;
-    for (const r of sorted) {
-      const w = parseInt(r.team_score||0) > parseInt(r.opponent_score||0);
-      if ((w && first==='win') || (!w && first==='loss')) streakCount++;
+    for (const r of results) {
+      if ((r.win && first==='win') || (!r.win && first==='loss')) streakCount++;
       else break;
     }
   }
 
-  const chip = document.getElementById('streak-chip');
-  const label = streakType === 'neutral' ? '—' : (streakType === 'win' ? 'W' : 'L') + streakCount;
+  const chip  = document.getElementById('streak-chip');
+  const label = streakType==='neutral' ? '—' : (streakType==='win'?'W':'L') + streakCount;
   chip.textContent = '● Streak ' + label;
   chip.className = 'streak-chip ' + streakType;
 
-  // stat strip last result
-  if (sorted.length) {
-    const last = sorted[0];
-    const ts = parseInt(last.team_score||0);
-    const os = parseInt(last.opponent_score||0);
-    const win = ts > os;
-    const sv = document.getElementById('st-score');
-    sv.textContent = `${ts}–${os}`;
-    sv.className = 'stat-val ' + (win ? 'orange' : 'red');
-    document.getElementById('st-last-opp').textContent = 'vs ' + (last.opponent || '—');
+  // stat strip — last result
+  if (results.length) {
+    const last = results[0];
+    const sv   = document.getElementById('st-score');
+    sv.textContent = last.ts + '–' + last.os;
+    sv.className   = 'stat-val ' + (last.win ? 'orange' : 'red');
+    document.getElementById('st-last-opp').textContent = 'vs ' + last.oppName;
   }
 
   // streak stat cell
   const ss = document.getElementById('st-streak');
-  const ssLabel = streakType === 'neutral' ? '—' : (streakType === 'win' ? 'W' : 'L') + streakCount;
+  const ssLabel = streakType==='neutral' ? '—' : (streakType==='win'?'W':'L') + streakCount;
   ss.textContent = ssLabel;
-  ss.className = 'stat-val ' + (streakType==='win' ? 'orange' : streakType==='loss' ? 'red' : '');
+  ss.className = 'stat-val ' + (streakType==='win'?'orange':streakType==='loss'?'red':'');
   document.getElementById('st-streak-sub').textContent =
     streakType==='win' ? 'Hot run 🔥' : streakType==='loss' ? 'Bounce back time' : '—';
+
+  return { wins, losses, pct, streakType, streakCount };
 }
 
-// ─── NEXT GAME ────────────────────────────────────────────────────────────────
-function buildNextGame(rows) {
-  if (!rows.length) return;
-  const ng = rows[0];
-  const opp  = ng.opponent || ng.Opponent || '—';
-  const date = ng.date || ng.Date || '';
-  const time = ng.time || ng.Time || '';
-  const venue= ng.venue || ng.Venue || '—';
-  const ha   = ng.home_away || ng.HomeAway || '—';
+// ── next game + countdown ────────────────────────────────────────────────────
+function buildNextGame(nextGame) {
+  if (!nextGame) return;
+  const { date, time, oppName, status, gameDate } = nextGame;
 
-  document.getElementById('st-opp').textContent   = opp;
-  document.getElementById('st-venue').textContent = `${ha} · ${venue}`;
+  document.getElementById('st-opp').textContent   = oppName;
+  document.getElementById('st-venue').textContent  = status;
   document.getElementById('st-time').textContent  = time;
-  document.getElementById('st-date').textContent  = fmtFullDate(date, time);
+  document.getElementById('st-date').textContent  = date;
+  document.getElementById('cd-opp').textContent   = oppName.toUpperCase();
+  document.getElementById('cd-date').textContent  = date;
+  document.getElementById('cd-ha').textContent    = status;
 
-  document.getElementById('cd-opp').textContent   = opp.toUpperCase();
-  document.getElementById('cd-date').textContent  = fmtFullDate(date, time);
-  document.getElementById('cd-ha').textContent    = ha;
-  document.getElementById('cd-venue').textContent = venue;
-
-  const gameDate = parseGameDate(date, time);
   if (gameDate) startCountdown(gameDate);
 }
 
-// ─── COUNTDOWN ────────────────────────────────────────────────────────────────
 function startCountdown(target) {
   function tick() {
     const diff = target - new Date();
@@ -752,66 +629,70 @@ function startCountdown(target) {
       ['cd-d','cd-h','cd-m'].forEach(id => document.getElementById(id).textContent = '00');
       return;
     }
-    const d = Math.floor(diff / 86400000);
-    const h = Math.floor((diff % 86400000) / 3600000);
-    const m = Math.floor((diff % 3600000) / 60000);
+    const d = Math.floor(diff/86400000);
+    const h = Math.floor((diff%86400000)/3600000);
+    const m = Math.floor((diff%3600000)/60000);
     document.getElementById('cd-d').textContent = String(d).padStart(2,'0');
     document.getElementById('cd-h').textContent = String(h).padStart(2,'0');
     document.getElementById('cd-m').textContent = String(m).padStart(2,'0');
   }
-  tick();
-  setInterval(tick, 30000);
+  tick(); setInterval(tick, 30000);
 }
 
-// ─── ROSTER ───────────────────────────────────────────────────────────────────
-function buildRoster(rows) {
-  document.getElementById('roster-label').textContent = `Active Roster — ${rows.length} Players`;
-  let html = '';
-  rows.forEach(p => {
-    const name   = (p.name || p.Name || '').trim();
-    const number = (p.number || p.Number || '').trim();
-    const pos    = (p.position || p.Position || '').trim();
-    const photo  = (p.photo || p.Photo || '').trim();
-    const parts  = name.split(' ');
-    const ini    = parts.slice(0,2).map(w => w[0]||'').join('').toUpperCase();
-    const lastName = (parts[parts.length-1]||name).toUpperCase();
-
-    const avatarInner = photo
-      ? `<img src="images/${photo}" alt="${name}" onerror="this.parentElement.innerHTML='${ini}'">`
-      : ini;
-
-    html += `
-    <div class="player-tile">
-      <div class="p-number">#${number}</div>
-      <div class="p-avatar">${avatarInner}</div>
-      <div class="p-name">${lastName}</div>
-      <div class="p-pos">${pos.toUpperCase()}</div>
-    </div>`;
-  });
-  document.getElementById('roster-grid').innerHTML = html || '<div style="grid-column:1/-1;text-align:center;color:var(--muted);font-family:var(--mono);font-size:0.7rem;padding:2rem;background:var(--panel);">No players found</div>';
-}
-
-// ─── TICKER ───────────────────────────────────────────────────────────────────
-function buildTicker(ngRows, resRows) {
-  const wins   = resRows.filter(r => parseInt(r.team_score||0) > parseInt(r.opponent_score||0)).length;
-  const losses = resRows.length - wins;
-  const pct    = resRows.length ? Math.round(wins/resRows.length*100)+'%' : '—';
-  const opp    = ngRows.length ? (ngRows[0].opponent || '—').toUpperCase() : '—';
-  const ha     = ngRows.length ? (ngRows[0].home_away || '').toUpperCase() : '';
-  const venue  = ngRows.length ? (ngRows[0].venue || '').toUpperCase() : '';
-
+// ── ticker ───────────────────────────────────────────────────────────────────
+function buildTicker(stats, nextGame) {
+  const opp = nextGame ? nextGame.oppName.toUpperCase() : '—';
+  const ha  = nextGame ? nextGame.status.toUpperCase() : '';
   const items = [
     `AIR BALLERS <span class="ticker-sep">·</span> THESSALONIKI AMATEUR LEAGUE`,
-    `SEASON 2025–26 <span class="ticker-sep">·</span> RECORD ${wins}W – ${losses}L`,
-    `NEXT GAME <span class="ticker-sep">·</span> VS ${opp} <span class="ticker-sep">·</span> ${ha} @ ${venue}`,
-    `WIN PCT ${pct}`,
+    `SEASON 2025–26 <span class="ticker-sep">·</span> RECORD ${stats.wins}W – ${stats.losses}L`,
+    `NEXT GAME <span class="ticker-sep">·</span> VS ${opp} <span class="ticker-sep">·</span> ${ha}`,
+    `WIN PCT ${stats.pct} <span class="ticker-sep">·</span> STREAK ${(stats.streakType==='win'?'W':'L') + stats.streakCount}`,
   ];
-  // duplicate for seamless loop
-  const doubled = [...items, ...items].map(t => `<span class="ticker-item">${t}</span>`).join('');
+  const doubled = [...items,...items].map(t=>`<span class="ticker-item">${t}</span>`).join('');
   document.getElementById('ticker-track').innerHTML = doubled;
 }
 
-// ─── GO ───────────────────────────────────────────────────────────────────────
+// ── main ─────────────────────────────────────────────────────────────────────
+async function init() {
+  try {
+    setProgress(10, 'Fetching results...');
+    const resultsHTML  = await proxyFetch(`${BASE}/teams/${TEAM}/results`);
+    const resultsDoc   = parseHTML(resultsHTML);
+
+    setProgress(35, 'Parsing game log...');
+    const results = buildResults(resultsDoc);
+
+    setProgress(50, 'Fetching schedule...');
+    const scheduleHTML = await proxyFetch(`${BASE}/teams/${TEAM}/schedule`);
+    const scheduleDoc  = parseHTML(scheduleHTML);
+
+    setProgress(65, 'Parsing schedule...');
+    const nextGame = buildSchedule(scheduleDoc);
+
+    setProgress(75, 'Building scoreboard...');
+    const stats = buildHeader(results);
+    buildNextGame(nextGame);
+    buildTicker(stats, nextGame);
+
+    setProgress(85, 'Fetching roster...');
+    const rosterHTML = await proxyFetch(`${BASE}/teams/${TEAM}/roster`);
+    const rosterDoc  = parseHTML(rosterHTML);
+
+    setProgress(95, 'Building roster...');
+    buildRoster(rosterDoc);
+
+    setProgress(100, 'Ready!');
+    setTimeout(hideLoader, 400);
+
+  } catch(e) {
+    console.error(e);
+    document.getElementById('load-text').textContent = 'Error: ' + e.message;
+    // Still hide loader after a moment and show what we have
+    setTimeout(hideLoader, 2000);
+  }
+}
+
 init();
 </script>
 </body>
