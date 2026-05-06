@@ -1,13 +1,16 @@
-number;name;position;photo
-3;Andreadakis Nikos;Guard;
-4;Koutziampasis Antonis;Guard;koutz2.jpg
-5;Chrysovelidis George;Guard;
-7;Pantalonas Vaggelis;Guard;pantalonas.jpg
-8;Tsikouras Vaggelis;Forward;
-10;Gkoustilis George;Guard;karou2.jpg
-23;Krystallis Ricky;Center;ricky.jpg
-24;Karagiannis Dimitris;Guard;karagiannis.jpg
-27;Panouxos Nikos;Guard;panouxos.jpg
-31;Goulas Tilemaxos;Forward;tile.jpg
-34;Stratakis Stratos;Center;
-42;Fragkis Kostas;Forward;
+number;name_en;position;photo;name_gr
+3;Andreadakis Nikos;Guard;;Ανδρεαδάκης Εμμ. Νικόλαος
+4;Koutziampasis Antonis;Guard;koutz2.jpg;Κουτζιάμπασης Θωμ. Αντώνιος
+5;Chrysovelidis George;Guard;;Χρυσοβελίδης Χρή. Γεώργιος
+7;Pantalonas Vaggelis;Guard;pantalonas.jpg;Πανταλώνας Νικ. Ευάγγελος
+8;Tsikouras Vaggelis;Forward;;Τσικουρας Αργ. Ευάγγελος
+10;Gkoustilis George;Guard;karou2.jpg;Γκουστίλης Αθα. Γεώργιος
+23;Krystallis Ricky;Center;ricky.jpg;Κρυστάλλης Αθα. Rick
+24;Karagiannis Dimitris;Guard;karagiannis.jpg;Καραγιάννης Ιωά. Δημήτριος
+27;Panouxos Nikos;Guard;panouxos.jpg;ΠΑΝΟΥΧΟΣ ΑΡΓ. ΝΙΚΟΛΑΟΣ
+31;Goulas Tilemaxos;Forward;tile.jpg;Γούλας Ιωά. Τηλέμαχος
+34;Stratakis Stratos;Center;;Στρατάκης Χρή. Ευστράτιος
+42;Fragkis Kostas;Forward;;Φραγγής Ιωά. Κωνσταντίνος
+;;;;;;Καρακώστας Χρή. Ιωάννης
+;;;;;;Λαγός Χρι. Φώτιος
+;;;;;;Σκουφης Απο. Σωτηρης
