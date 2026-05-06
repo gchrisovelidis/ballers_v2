@@ -85,11 +85,11 @@ body {
 .stat-cell:hover { background:var(--bg3); }
 .stat-cell::after { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:var(--orange); opacity:0; transition:opacity 0.2s; }
 .stat-cell:hover::after { opacity:0.5; }
-.stat-tag { font-family:var(--mono); font-size:0.6rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); margin-bottom:0.6rem; display:block; }
+.stat-tag { font-family:var(--mono); font-size:0.6rem; letter-spacing:0.2em; text-transform:uppercase; color:#666; margin-bottom:0.8rem; display:block; }
 .stat-val { font-family:var(--display); font-size:2.2rem; line-height:1; color:var(--white); letter-spacing:0.04em; }
 .stat-val.orange { color:var(--orange); text-shadow:0 0 20px rgba(255,92,0,0.3); }
 .stat-val.red    { color:var(--red); }
-.stat-sub { font-family:var(--ui); font-size:0.78rem; color:var(--muted); margin-top:0.4rem; font-weight:500; line-height:1.4; }
+.stat-sub { font-family:var(--ui); font-size:0.9rem; color:#aaa; margin-top:0.5rem; font-weight:600; line-height:1.5; }
 
 /* COUNTDOWN */
 .countdown-board { background:var(--panel); border:1px solid var(--border2); border-radius:4px; padding:2rem 1.5rem; display:grid; grid-template-columns:1fr auto; gap:2rem; align-items:center; position:relative; overflow:hidden; }
@@ -118,10 +118,10 @@ body {
 .data-board tr:last-child td { border-bottom:none; }
 .data-board tr.row-odd { background:rgba(255,255,255,0.015); }
 .data-board tr:hover td { background:rgba(255,92,0,0.03); }
-.data-board tr.next-row td { background:rgba(255,92,0,0.07); border-left:3px solid var(--orange); }
+.data-board tr.next-row td { background:rgba(255,92,0,0.10); border-left:3px solid var(--orange); color:var(--white) !important; }
 
-.td-date  { font-family:var(--mono) !important; font-size:0.75rem !important; color:var(--muted) !important; white-space:nowrap; }
-.td-opp   { font-weight:600 !important; }
+.td-date  { font-family:var(--mono) !important; font-size:0.78rem !important; color:#aaa !important; white-space:nowrap; }
+.td-opp   { font-weight:700 !important; font-size:0.95rem !important; color:var(--white) !important; }
 .td-logo  { width:22px; height:22px; border-radius:50%; object-fit:contain; vertical-align:middle; margin-right:0.5rem; background:var(--bg2); }
 .td-score { font-family:var(--mono) !important; font-size:1rem !important; white-space:nowrap; }
 .res-badge { font-family:var(--mono) !important; font-size:0.7rem !important; letter-spacing:0.15em; padding:0.22rem 0.5rem; border-radius:2px; display:inline-block; font-weight:700 !important; }
@@ -135,17 +135,18 @@ body {
 .stat-hi { color:var(--orange) !important; font-weight:700 !important; }
 
 /* ROSTER */
-.roster-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:1px; background:var(--border2); border:1px solid var(--border2); border-radius:4px; overflow:hidden; }
-.player-tile { background:var(--panel); padding:1.2rem 0.75rem 1rem; display:flex; flex-direction:column; align-items:center; gap:0.4rem; cursor:default; transition:background 0.15s; }
-.player-tile:hover { background:var(--bg3); }
-.player-tile:hover .p-avatar { border-color:var(--orange); color:var(--orange); }
-.player-tile:hover .p-number { color:var(--orange); }
+.roster-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:1rem; padding:1rem; background:var(--bg2); border:1px solid var(--border2); border-radius:8px; }
+.player-tile { background:var(--panel); padding:1.4rem 0.75rem 1.2rem; display:flex; flex-direction:column; align-items:center; gap:0.45rem; cursor:default; transition:all 0.2s; border-radius:12px; border:1px solid var(--border2); }
+.player-tile:hover { background:var(--bg3); border-color:rgba(255,92,0,0.3); transform:translateY(-3px); box-shadow:0 8px 24px rgba(255,92,0,0.1); }
+.player-tile:hover .p-avatar { border-color:var(--orange); box-shadow:0 0 16px rgba(255,92,0,0.3); }
+.player-tile:hover .p-surname { color:var(--orange); }
 .p-number { font-family:var(--mono); font-size:0.62rem; letter-spacing:0.1em; color:var(--muted); transition:color 0.15s; }
-.p-avatar { width:60px; height:60px; border-radius:50%; border:1px solid var(--border2); background:var(--bg2); display:flex; align-items:center; justify-content:center; font-family:var(--display); font-size:1.3rem; color:var(--white); transition:border-color 0.15s,color 0.15s; overflow:hidden; }
+.p-avatar { width:68px; height:68px; border-radius:50%; border:2px solid var(--border2); background:linear-gradient(135deg,#1a1a1a,#0f0f0f); display:flex; align-items:center; justify-content:center; font-family:var(--display); font-size:1.5rem; color:var(--white); transition:all 0.2s; overflow:hidden; }
 .p-avatar img { width:100%; height:100%; object-fit:cover; border-radius:50%; }
-.p-name { font-family:var(--display); font-size:0.82rem; letter-spacing:0.04em; color:var(--white); text-align:center; line-height:1.1; }
-.p-pos  { font-family:var(--mono); font-size:0.55rem; letter-spacing:0.15em; color:var(--muted); }
-.p-stat { font-family:var(--mono); font-size:0.6rem; color:var(--orange); letter-spacing:0.05em; }
+.p-surname { font-family:var(--display); font-size:0.95rem; letter-spacing:0.06em; color:var(--white); text-align:center; line-height:1.1; transition:color 0.2s; margin-top:0.2rem; }
+.p-name { font-family:var(--mono); font-size:0.55rem; letter-spacing:0.05em; color:var(--orange); text-align:center; line-height:1.4; }
+.p-pos  { font-family:var(--mono); font-size:0.5rem; letter-spacing:0.15em; color:var(--muted); }
+.p-stat { font-family:var(--mono); font-size:0.58rem; color:#777; letter-spacing:0.03em; margin-top:0.1rem; }
 
 /* FOOTER */
 .arena-footer { margin-top:4rem; padding-top:1.5rem; border-top:1px solid var(--border2); display:flex; align-items:center; justify-content:space-between; gap:1rem; }
@@ -224,12 +225,12 @@ body {
   <div class="stat-strip">
     <div class="stat-cell">
       <span class="stat-tag">Next Opponent</span>
-      <div class="stat-val" id="st-opp" style="font-size:1.4rem;font-family:var(--display);">—</div>
+      <div class="stat-val" id="st-opp" style="font-size:1.5rem;font-family:var(--display);color:var(--white);">—</div>
       <div class="stat-sub" id="st-venue">—</div>
     </div>
     <div class="stat-cell">
       <span class="stat-tag">Tip-off</span>
-      <div class="stat-val" id="st-time" style="font-size:1.4rem;font-family:var(--mono);">—</div>
+      <div class="stat-val" id="st-time" style="font-size:1.5rem;font-family:var(--mono);color:var(--white);">—</div>
       <div class="stat-sub" id="st-date">—</div>
     </div>
     <div class="stat-cell">
@@ -445,7 +446,34 @@ function buildResults(doc) {
     </tr>`;
   });
 
-  $('results-body').innerHTML = html || `<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--muted);font-family:var(--mono);font-size:0.7rem;">No results found</td></tr>`;
+  if (!html) {
+    $('results-body').innerHTML = `<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--muted);font-family:var(--mono);font-size:0.7rem;">No results found</td></tr>`;
+    return results;
+  }
+  // Split into first 10 and the rest
+  const parser = new DOMParser();
+  const tempDoc = parser.parseFromString(`<table>${html}</table>`, 'text/html');
+  const allRows = [...tempDoc.querySelectorAll('tr')];
+  const first10 = allRows.slice(0, 10).map(r => r.outerHTML).join('');
+  const rest    = allRows.slice(10).map(r => r.outerHTML).join('');
+  $('results-body').innerHTML = first10;
+  if (rest) {
+    // Add hidden rows container + View More button
+    const hiddenDiv = document.createElement('tbody');
+    hiddenDiv.id = 'results-extra';
+    hiddenDiv.style.display = 'none';
+    hiddenDiv.innerHTML = rest;
+    $('results-body').parentNode.appendChild(hiddenDiv);
+    // Add button row
+    const btnRow = document.createElement('tr');
+    btnRow.id = 'view-more-row';
+    btnRow.innerHTML = `<td colspan="6" style="text-align:center;padding:0.75rem;border-top:1px solid var(--border2);">
+      <button onclick="toggleResults()" id="view-more-btn" style="background:transparent;border:1px solid var(--border2);color:#888;font-family:var(--mono);font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.4rem 1.2rem;border-radius:3px;cursor:pointer;transition:all 0.2s;">
+        ▼ View All ${allRows.length} Results
+      </button>
+    </td>`;
+    $('results-body').parentNode.appendChild(btnRow);
+  }
   return results;
 }
 
@@ -547,8 +575,8 @@ function buildRoster(doc, playerStats) {
     html += `<div class="player-tile">
       <div class="p-number"></div>
       <div class="p-avatar">${ini}</div>
-      <div class="p-name">${displayName}</div>
-      <div class="p-pos" style="font-size:0.5rem;color:#333;">${firstName}</div>
+      <div class="p-surname">${displayName}</div>
+      <div class="p-name">${firstName}</div>
       ${statLine ? `<div class="p-stat">${statLine}</div>` : ''}
     </div>`;
     count++;
@@ -687,6 +715,29 @@ function buildTicker(stats, ng) {
     `WIN PCT ${stats.pct} <span class="ticker-sep">·</span> STREAK ${stats.st==='neutral'?'—':(stats.st==='win'?'W':'L')+stats.sc}`,
   ];
   $('ticker').innerHTML = [...items,...items].map(t=>`<span class="ticker-item">${t}</span>`).join('');
+}
+
+// ─── TOGGLE RESULTS ──────────────────────────────────────────────────────────
+function toggleResults() {
+  const extra = $('results-extra');
+  const btn   = $('view-more-btn');
+  const row   = $('view-more-row');
+  if (!extra) return;
+  const isHidden = extra.style.display === 'none';
+  extra.style.display = isHidden ? '' : 'none';
+  // Move the button row to always be last
+  if (isHidden) {
+    btn.textContent = '▲ Show Less';
+    btn.style.color = 'var(--orange)';
+    btn.style.borderColor = 'rgba(255,92,0,0.3)';
+    extra.parentNode.appendChild(row);
+  } else {
+    const total = extra.querySelectorAll('tr').length + 10;
+    btn.textContent = `▼ View All ${total} Results`;
+    btn.style.color = '#888';
+    btn.style.borderColor = 'var(--border2)';
+    extra.parentNode.appendChild(row);
+  }
 }
 
 // ─── MAIN ─────────────────────────────────────────────────────────────────────
