@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """
 Air Ballers — Basketaki scraper
-Fetches results, schedule and roster from basketaki.com
-and writes data.json to the repo root.
+- Results & Schedule: Basketaki API (reliable JSON)
+- Player stats:       HTML scraper (only available as HTML)
+Writes data.json to the repo root.
+
 Run locally:  python scrape.py
-Run on CI:    triggered by GitHub Actions
+Run on CI:    triggered by GitHub Actions (.github/workflows/scrape.yml)
 """
 
 import json, re, sys
@@ -13,14 +15,13 @@ from urllib.request import urlopen, Request
 from urllib.error import URLError
 from html.parser import HTMLParser
 
-BASE  = "https://www.basketaki.com"
-TEAM  = "air-ballers"
-CDN   = "https://basketaki-web.b-cdn.net"
-PAGES = {
-    "results":  f"{BASE}/teams/{TEAM}/results",
-    "schedule": f"{BASE}/teams/{TEAM}/schedule",
-    "roster":   f"{BASE}/teams/{TEAM}/roster",
-}
+# ── CONFIG ─────────────────────────────────────────────────────────────────────
+TEAM_ID      = 558                          # Air Ballers numeric ID
+CURRENT_SEASON = "25/26"                    # Filter results to this season
+BASE         = "https://www.basketaki.com"
+CDN          = "https://basketaki-web.b-cdn.net"
+API_PROFILE  = f"{BASE}/api/v1/teams/{TEAM_ID}/profile"
+ROSTER_URL   = f"{BASE}/teams/air-ballers/roster"  # HTML scrape for stats only
 
 HEADERS = {
     "User-Agent": (
@@ -28,55 +29,207 @@ HEADERS = {
         "AppleWebKit/537.36 (KHTML, like Gecko) "
         "Chrome/124.0.0.0 Safari/537.36"
     ),
+    "Accept":          "application/json",
     "Accept-Language": "el-GR,el;q=0.9,en;q=0.8",
+    "X-Requested-With": "XMLHttpRequest",
+}
+
+HTML_HEADERS = {
+    "User-Agent": HEADERS["User-Agent"],
+    "Accept-Language": HEADERS["Accept-Language"],
 }
 
 
-def fetch(url):
+# ── HTTP HELPERS ───────────────────────────────────────────────────────────────
+def fetch_json(url):
+    """Fetch URL and return parsed JSON dict, or None on error."""
     req = Request(url, headers=HEADERS)
+    try:
+        with urlopen(req, timeout=20) as r:
+            raw = r.read().decode("utf-8", errors="replace")
+            return json.loads(raw)
+    except (URLError, json.JSONDecodeError) as e:
+        print(f"  ERROR fetching JSON {url}: {e}", file=sys.stderr)
+        return None
+
+
+def fetch_html(url):
+    """Fetch URL and return raw HTML string."""
+    req = Request(url, headers=HTML_HEADERS)
     try:
         with urlopen(req, timeout=20) as r:
             return r.read().decode("utf-8", errors="replace")
     except URLError as e:
-        print(f"  ERROR fetching {url}: {e}", file=sys.stderr)
+        print(f"  ERROR fetching HTML {url}: {e}", file=sys.stderr)
         return ""
 
 
-# ── Minimal HTML table parser ──────────────────────────────────────────────────
+# ── NAME HELPERS ──────────────────────────────────────────────────────────────
+def title_case_greek(s):
+    """Capitalise first letter of each word, lowercase the rest."""
+    def cap_word(w):
+        return w[0].upper() + w[1:].lower() if w else w
+    return " ".join(cap_word(w) for w in s.split())
+
+
+def format_name(full):
+    """
+    Input:  'ΠΑΝΟΥΧΟΣ ΑΡΓ. ΝΙΚΟΛΑΟΣ' or 'Ανδρεαδάκης Εμμ. Νικόλαος'
+    Output: { surname: 'Πανούχος', firstName: 'Νικόλαος', raw: '...' }
+    Strips middle abbreviation (1-4 chars ending in dot).
+    """
+    parts   = full.strip().split()
+    surname = title_case_greek(parts[0]) if parts else ""
+    rest    = [p for p in parts[1:] if not re.match(r"^[Α-Ωα-ωA-Za-z]{1,4}\.$", p)]
+    first   = title_case_greek(rest[-1]) if rest else ""
+    return {"surname": surname, "firstName": first, "raw": full.strip()}
+
+
+# ── API: RESULTS ───────────────────────────────────────────────────────────────
+def parse_api_results(games_raw):
+    """
+    Parse the 'results' array from the API profile response.
+    Each game object has: home_team, away_team, gameResult, tournament, etc.
+    """
+    now     = datetime.now()
+    results = []
+
+    for g in games_raw:
+        # Season filter
+        season_name = g.get("tournament", {}).get("season", {}).get("name", "")
+        if season_name and season_name != CURRENT_SEASON:
+            continue
+
+        gr = g.get("gameResult")
+        if not gr:
+            continue  # No score yet — skip
+
+        home_id   = g.get("home_team")
+        away_id   = g.get("away_team")
+        home_score = gr.get("home_score_final", 0) or 0
+        away_score = gr.get("away_score_final", 0) or 0
+        home_win   = bool(gr.get("home_win"))
+
+        # Determine if we are home or away
+        we_are_home = (home_id == TEAM_ID)
+        if we_are_home:
+            ts, os_ = home_score, away_score
+            opp_info = g.get("teamAway", {})
+            ha = "Home"
+            win = home_win
+        else:
+            ts, os_ = away_score, home_score
+            opp_info = g.get("teamHome", {})
+            ha = "Away"
+            win = not home_win
+
+        opp_name = opp_info.get("name", "Unknown")
+        opp_id   = opp_info.get("id", "")
+        # Build slug from CDN pattern: we'll use the slug field if present
+        opp_slug = opp_info.get("slug", "")
+
+        date_str  = g.get("gameDateSimple", "")   # "26/04/2026"
+        game_id   = str(g.get("id", ""))
+        cat       = g.get("tournament", {}).get("league", {}).get("name", "")
+
+        results.append({
+            "date":     date_str,
+            "opponent": opp_name,
+            "oppSlug":  opp_slug,
+            "ts":       int(ts),
+            "os":       int(os_),
+            "win":      win,
+            "ha":       ha,
+            "cat":      cat,
+            "gameId":   game_id,
+        })
+
+    return results
+
+
+# ── API: SCHEDULE ──────────────────────────────────────────────────────────────
+def parse_api_schedule(games_raw):
+    """
+    Parse the 'schedule' array from the API profile response.
+    Only includes games without a result yet (upcoming).
+    """
+    now   = datetime.now()
+    games = []
+
+    for g in games_raw:
+        game_date_str = g.get("game_date")  # ISO: "2026-05-09T22:00:00.000+03:00"
+
+        # Parse game datetime
+        game_dt = None
+        is_future = False
+        if game_date_str and game_date_str != "-":
+            try:
+                # Strip timezone offset for naive comparison
+                dt_clean = re.sub(r"\.\d+[+-]\d{2}:\d{2}$", "", game_date_str)
+                game_dt  = datetime.fromisoformat(dt_clean)
+                is_future = game_dt > now
+            except ValueError:
+                pass
+
+        # Home or away
+        home_id   = g.get("home_team")
+        away_id   = g.get("away_team")
+        we_home   = (home_id == TEAM_ID)
+
+        opp_info  = g.get("teamAway" if we_home else "teamHome", {})
+        opp_name  = opp_info.get("name", "TBD")
+        opp_slug  = opp_info.get("slug", "")
+        ha        = "Home" if we_home else "Away"
+
+        court     = g.get("court") or {}
+        venue     = court.get("name", "") if court else ""
+        cat       = g.get("tournament", {}).get("league", {}).get("name", "")
+
+        # Formatted date/time
+        date_simple = g.get("gameDateSimple", "-")   # "09/05/2026"
+        time_str    = g.get("gameTime", "-")          # "22:00"
+        date_time   = f"{date_simple} {time_str}" if date_simple != "-" else "-"
+
+        games.append({
+            "dateTime": date_time,
+            "date":     date_simple,
+            "time":     time_str,
+            "opponent": opp_name,
+            "oppSlug":  opp_slug,
+            "ha":       ha,
+            "venue":    venue,
+            "cat":      cat,
+            "isFuture": is_future,
+            "ts":       game_dt.isoformat() if game_dt else None,
+        })
+
+    # Sort by date ascending
+    games.sort(key=lambda x: x["ts"] or "9999")
+    return games
+
+
+# ── HTML SCRAPER: PLAYER STATS ─────────────────────────────────────────────────
 class TableParser(HTMLParser):
     def __init__(self):
         super().__init__()
-        self.tables = []          # list of tables; each table = list of rows; each row = list of cells
-        self._in_table = False
-        self._in_row   = False
-        self._in_cell  = False
-        self._cell_buf = []
-        self._row_buf  = []
-        self._tbl_buf  = []
-        self._links    = {}       # cell_index → href
-        self._cell_idx = 0
-        self._cur_href = None
+        self.tables     = []
+        self._in_table  = False
+        self._in_row    = False
+        self._in_cell   = False
+        self._cell_buf  = []
+        self._row_buf   = []
+        self._tbl_buf   = []
 
     def handle_starttag(self, tag, attrs):
-        a = dict(attrs)
         if tag == "table":
             self._in_table = True
             self._tbl_buf  = []
         elif tag == "tr" and self._in_table:
             self._in_row  = True
             self._row_buf = []
-            self._cell_idx = 0
         elif tag in ("td", "th") and self._in_row:
             self._in_cell  = True
             self._cell_buf = []
-        elif tag == "a" and self._in_cell:
-            self._cur_href = a.get("href", "")
-            if self._cur_href and not self._cur_href.startswith("http"):
-                self._cur_href = BASE + self._cur_href
-        elif tag == "img" and self._in_cell:
-            src = a.get("src", "")
-            # store img src as pseudo-text so we can extract team slugs
-            self._cell_buf.append(f"[IMG:{src}]")
 
     def handle_endtag(self, tag):
         if tag == "table":
@@ -89,211 +242,57 @@ class TableParser(HTMLParser):
                 self._tbl_buf.append(self._row_buf)
         elif tag in ("td", "th") and self._in_cell:
             self._in_cell = False
-            text = " ".join("".join(self._cell_buf).split())
-            self._row_buf.append(text)
-            self._cell_idx += 1
-            self._cur_href = None
-        elif tag == "a":
-            self._cur_href = None
+            self._row_buf.append(" ".join("".join(self._cell_buf).split()))
 
     def handle_data(self, data):
         if self._in_cell:
             self._cell_buf.append(data)
 
 
-def parse_tables(html):
+def parse_player_stats(html):
+    """
+    Scrape player stats from the HTML roster page.
+    Uses Table 0 (cumulative season stats).
+    Column mapping (confirmed):
+      [0]=name [1]=GP [6]=PPG [12]=RPG [14]=APG [16]=SPG
+      [22]=FT% [24]=2P% [26]=3P%
+    """
     p = TableParser()
     p.feed(html)
-    return p.tables
-
-
-def slug_from_img(cell_text):
-    m = re.search(r"\[IMG:.*?/teams/([^.]+)\.png\]", cell_text)
-    return m.group(1) if m else ""
-
-
-def title_case_greek(s):
-    def cap_word(w):
-        if not w:
-            return w
-        return w[0].upper() + w[1:].lower()
-    return " ".join(cap_word(w) for w in s.split())
-
-
-def format_name(full):
-    """
-    Input:  'ΠΑΝΟΥΧΟΣ ΑΡΓ. ΝΙΚΟΛΑΟΣ' or 'Ανδρεαδάκης Εμμ. Νικόλαος'
-    Output: { surname: 'Πανούχος', firstName: 'Νικόλαος' }
-    Strips middle abbreviation (2-4 chars ending in dot).
-    """
-    parts   = full.strip().split()
-    surname = title_case_greek(parts[0]) if parts else ""
-    rest    = [p for p in parts[1:] if not re.match(r"^[Α-Ωα-ωA-Za-z]{1,4}\.$", p)]
-    first   = title_case_greek(rest[-1]) if rest else ""
-    return {"surname": surname, "firstName": first, "raw": full.strip()}
-
-
-# ── RESULTS ────────────────────────────────────────────────────────────────────
-def parse_results(html):
-    tables = parse_tables(html)
-    # Look for the table that has W/L values
-    result_table = None
-    for t in tables:
-        for row in t:
-            if len(row) >= 5 and row[2].strip() in ("W", "L"):
-                result_table = t
-                break
-        if result_table:
-            break
-
-    if not result_table:
+    if not p.tables:
         return []
 
-    results = []
-    for row in result_table:
-        if len(row) < 5:
-            continue
-        wl = row[2].strip()
-        if wl not in ("W", "L"):
-            continue
-
-        date     = row[0].strip()
-        opp_raw  = row[1]
-        opp_slug = slug_from_img(opp_raw)
-        # Clean opponent name — remove [IMG:...] tokens
-        opp_name = re.sub(r"\[IMG:[^\]]+\]", "", opp_raw).strip()
-        score    = row[3].strip()   # "63 - 47"
-        ha       = row[4].strip()   # Home / Away
-        cat      = row[5].strip() if len(row) > 5 else ""
-        season   = row[6].strip() if len(row) > 6 else ""
-
-        # Filter to current season only
-        if season and season != "25/26":
-            continue
-
-        # game link — look for /games/NNNNN in remaining cells
-        game_id  = ""
-        for cell in row[6:]:
-            m = re.search(r"/games/(\d+)", cell)
-            if m:
-                game_id = m.group(1)
-                break
-
-        sm = re.match(r"(\d+)\s*-\s*(\d+)", score)
-        ts, os_ = 0, 0
-        if sm:
-            if ha.lower() == "home":
-                ts, os_ = int(sm.group(1)), int(sm.group(2))
-            else:
-                ts, os_ = int(sm.group(2)), int(sm.group(1))
-
-        results.append({
-            "date":     date,
-            "opponent": opp_name,
-            "oppSlug":  opp_slug,
-            "ts":       ts,
-            "os":       os_,
-            "win":      wl == "W",
-            "ha":       ha,
-            "cat":      cat,
-            "gameId":   game_id,
-        })
-
-    return results
-
-
-# ── SCHEDULE ───────────────────────────────────────────────────────────────────
-def parse_schedule(html):
-    tables = parse_tables(html)
-    now    = datetime.now()
-    games  = []
-
-    for table in tables:
-        for row in table:
-            if len(row) < 4:
-                continue
-            # TD[1] = "09/05/2026 22:00"
-            dt_raw = row[1].strip()
-            m = re.match(r"(\d{2})/(\d{2})/(\d{4})\s+(\d{2}):(\d{2})", dt_raw)
-            if not m:
-                continue
-
-            opp_raw  = row[2]
-            opp_slug = slug_from_img(opp_raw)
-            opp_name = re.sub(r"\[IMG:[^\]]+\]", "", opp_raw).strip()
-            ha       = row[3].strip()
-            cat      = row[4].strip() if len(row) > 4 else ""
-            venue    = row[7].strip() if len(row) > 7 else ""
-
-            game_dt = datetime(int(m.group(3)), int(m.group(2)), int(m.group(1)),
-                               int(m.group(4)), int(m.group(5)))
-            is_future = game_dt > now
-
-            games.append({
-                "dateTime": dt_raw,
-                "date":     f"{m.group(1)}/{m.group(2)}/{m.group(3)}",
-                "time":     f"{m.group(4)}:{m.group(5)}",
-                "opponent": opp_name,
-                "oppSlug":  opp_slug,
-                "ha":       ha,
-                "venue":    venue,
-                "cat":      cat,
-                "isFuture": is_future,
-                "ts":       game_dt.isoformat(),
-            })
-        if games:
-            break
-
-    return games
-
-
-# ── ROSTER / STATS ──────────────────────────────────────────────────────────────
-def parse_roster(html):
-    tables = parse_tables(html)
-    if not tables:
-        return []
-
-    # First table has real cumulative stats (others have zeros)
-    first = tables[0]
+    first   = p.tables[0]
     players = []
 
     for row in first:
         if len(row) < 10:
             continue
         name_raw = row[0].strip()
-        # Skip header rows
         if not name_raw or name_raw in ("Παίχτης", "Player"):
             continue
-        # Skip rows that are all zeros
+        # Skip all-zero rows (other season tables)
         try:
-            if all(float(v.replace(",", ".")) == 0 for v in row[1:5] if v.replace(",", ".").replace(".", "").isdigit()):
+            if all(float(v.replace(",", ".") or "0") == 0
+                   for v in row[3:7]
+                   if v.replace(",", ".").replace(".", "").replace("-","").isdigit()):
                 continue
-        except:
+        except Exception:
             pass
 
-        gp   = row[1].strip()
-        ppg  = row[6].strip()   # Ποντοι ΜΟ
-        rpg  = row[12].strip()  # ΡΜΠ ΜΟ
-        apg  = row[14].strip()  # ΑΣΙ ΜΟ
-        spg  = row[16].strip()  # ΚΛΨ ΜΟ
-        ftp  = row[22].strip() if len(row) > 22 else "—"
-        twop = row[24].strip() if len(row) > 24 else "—"
-        thrp = row[26].strip() if len(row) > 26 else "—"
-
         name_info = format_name(name_raw)
-
         players.append({
             "raw":       name_raw,
             "surname":   name_info["surname"],
             "firstName": name_info["firstName"],
-            "gp":        gp,
-            "ppg":       ppg,
-            "rpg":       rpg,
-            "apg":       apg,
-            "spg":       spg,
-            "ftp":       ftp,
-            "twop":      twop,
-            "thrp":      thrp,
+            "gp":        row[1].strip(),
+            "ppg":       row[6].strip()              if len(row) > 6  else "—",
+            "rpg":       row[12].strip()             if len(row) > 12 else "—",
+            "apg":       row[14].strip()             if len(row) > 14 else "—",
+            "spg":       row[16].strip()             if len(row) > 16 else "—",
+            "ftp":       row[22].strip()             if len(row) > 22 else "—",
+            "twop":      row[24].strip()             if len(row) > 24 else "—",
+            "thrp":      row[26].strip()             if len(row) > 26 else "—",
         })
 
     return players
@@ -304,24 +303,35 @@ def main():
     print("Air Ballers scraper starting...")
     print(f"  Timestamp: {datetime.now().isoformat()}")
 
-    print("  Fetching results...")
-    results_html  = fetch(PAGES["results"])
-    print("  Fetching schedule...")
-    schedule_html = fetch(PAGES["schedule"])
-    print("  Fetching roster...")
-    roster_html   = fetch(PAGES["roster"])
+    # ── 1. API call — results + schedule ──────────────────────────────────────
+    print(f"  Fetching API: {API_PROFILE}")
+    api_data = fetch_json(API_PROFILE)
 
-    results  = parse_results(results_html)
-    schedule = parse_schedule(schedule_html)
-    players  = parse_roster(roster_html)
+    if not api_data:
+        print("  ERROR: Could not fetch API data. Aborting.", file=sys.stderr)
+        sys.exit(1)
 
-    print(f"  Parsed: {len(results)} results (25/26 season only), {len(schedule)} games, {len(players)} players")
+    results_raw  = api_data.get("results", [])
+    schedule_raw = api_data.get("schedule", [])
 
-    # Compute summary stats
-    valid_results = [r for r in results if r["ts"] > 0 or r["os"] > 0]
-    wins   = sum(1 for r in valid_results if r["win"])
-    losses = len(valid_results) - wins
-    pct    = round(wins / len(valid_results) * 100) if valid_results else 0
+    print(f"  API returned: {len(results_raw)} results, {len(schedule_raw)} scheduled games")
+
+    results  = parse_api_results(results_raw)
+    schedule = parse_api_schedule(schedule_raw)
+
+    print(f"  Parsed: {len(results)} results ({CURRENT_SEASON}), {len(schedule)} schedule entries")
+
+    # ── 2. HTML scrape — player stats only ────────────────────────────────────
+    print(f"  Fetching player stats HTML: {ROSTER_URL}")
+    roster_html = fetch_html(ROSTER_URL)
+    players     = parse_player_stats(roster_html)
+    print(f"  Parsed: {len(players)} players")
+
+    # ── 3. Compute summary stats ───────────────────────────────────────────────
+    valid   = [r for r in results if r["ts"] > 0 or r["os"] > 0]
+    wins    = sum(1 for r in valid if r["win"])
+    losses  = len(valid) - wins
+    pct     = round(wins / len(valid) * 100) if valid else 0
 
     streak_type, streak_count = "neutral", 0
     if results:
@@ -333,18 +343,19 @@ def main():
             else:
                 break
 
-    # Next game
-    future = [g for g in schedule if g["isFuture"]]
+    # ── 4. Next game ──────────────────────────────────────────────────────────
+    future    = [g for g in schedule if g["isFuture"]]
     next_game = future[0] if future else None
 
+    # ── 5. Write data.json ────────────────────────────────────────────────────
     data = {
-        "updated":      datetime.now().isoformat(),
-        "record":       {"wins": wins, "losses": losses, "pct": pct},
-        "streak":       {"type": streak_type, "count": streak_count},
-        "nextGame":     next_game,
-        "schedule":     schedule,
-        "results":      results,
-        "players":      players,
+        "updated":  datetime.now().isoformat(),
+        "record":   {"wins": wins, "losses": losses, "pct": pct},
+        "streak":   {"type": streak_type, "count": streak_count},
+        "nextGame": next_game,
+        "schedule": schedule,
+        "results":  results,
+        "players":  players,
     }
 
     with open("data.json", "w", encoding="utf-8") as f:
@@ -354,6 +365,8 @@ def main():
     print(f"  Record: {wins}W – {losses}L ({pct}%)")
     if next_game:
         print(f"  Next game: vs {next_game['opponent']} on {next_game['dateTime']}")
+    else:
+        print("  No upcoming games found")
 
 
 if __name__ == "__main__":
