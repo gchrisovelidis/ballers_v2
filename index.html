@@ -32,7 +32,6 @@ body {
 .load-logo { width:80px; mix-blend-mode:lighten; }
 .load-bar-wrap { width:200px; height:2px; background:var(--border2); border-radius:2px; overflow:hidden; }
 .load-bar { height:100%; width:0%; background:var(--orange); border-radius:2px; transition:width 0.3s ease; box-shadow:0 0 10px rgba(255,92,0,0.5); }
-.load-text { font-family:var(--mono); font-size:0.6rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); }
 
 /* TICKER */
 .ticker-wrap { width:100%; background:var(--orange); overflow:hidden; height:28px; display:flex; align-items:center; position:relative; z-index:10; }
@@ -243,7 +242,6 @@ body {
 <div id="loading">
   <img src="logo_v2.png" alt="Air Ballers" class="load-logo">
   <div class="load-bar-wrap"><div class="load-bar" id="load-bar"></div></div>
-  <div class="load-text" id="load-text">Loading team data...</div>
 </div>
 
 <div class="ticker-wrap"><div class="ticker-track" id="ticker"><span class="ticker-item">AIR BALLERS <span class="ticker-sep">·</span> THESSALONIKI AMATEUR LEAGUE <span class="ticker-sep">·</span> 2025–26 SEASON</span><span class="ticker-item">AIR BALLERS <span class="ticker-sep">·</span> THESSALONIKI AMATEUR LEAGUE <span class="ticker-sep">·</span> 2025–26 SEASON</span></div></div>
@@ -387,9 +385,8 @@ const BASE = 'https://www.basketaki.com';
 const $  = id => document.getElementById(id);
 const num = s => parseFloat((s||'0').replace(',','.')) || 0;
 
-function progress(pct, msg) {
+function progress(pct) {
   $('load-bar').style.width = pct + '%';
-  $('load-text').textContent = msg;
 }
 function hideLoader() {
   const el = $('loading');
@@ -674,24 +671,24 @@ function toggleResults() {
 // ─── MAIN ─────────────────────────────────────────────────────────────────────
 async function init() {
   try {
-    progress(20, 'Loading data...');
+    progress(20);
     const res  = await fetch('data.json?t=' + Date.now());
     if (!res.ok) throw new Error('data.json not found');
     const data = await res.json();
 
-    progress(50, 'Building schedule...');
+    progress(50);
     buildSchedule(data.schedule || []);
 
-    progress(65, 'Building game log...');
+    progress(65);
     buildResults(data.results || []);
 
-    progress(75, 'Building stats...');
+    progress(75);
     buildStats(data.players || []);
 
-    progress(85, 'Building roster...');
+    progress(85);
     buildRoster(data.players || []);
 
-    progress(92, 'Building header...');
+    progress(92);
     buildHeader(data);
     buildNextGame(data.nextGame);
     buildTicker(data);
@@ -704,7 +701,7 @@ async function init() {
       if (el) el.textContent = `Last updated: ${fmt} · basketaki.com`;
     }
 
-    progress(100, 'Ready!');
+    progress(100);
     setTimeout(hideLoader, 300);
 
   } catch(e) {
