@@ -1,5 +1,5 @@
 {
-  "updated": "2026-05-07T08:48:07.988889",
+  "updated": "2026-05-07T13:10:32.260661",
   "record": {
     "wins": 13,
     "losses": 12,
@@ -33,283 +33,367 @@
       "cat": "S.Development 2 Thessaloniki",
       "isFuture": true,
       "ts": "2026-05-09T22:00:00"
+    },
+    {
+      "dateTime": "-",
+      "date": "-",
+      "time": "-",
+      "opponent": "Φαβορί-τες BC",
+      "oppSlug": "favorites-bc",
+      "ha": "Away",
+      "venue": "",
+      "cat": "S.Development 2 Thessaloniki",
+      "isFuture": false,
+      "ts": null
+    },
+    {
+      "dateTime": "-",
+      "date": "-",
+      "time": "-",
+      "opponent": "Bad Boys",
+      "oppSlug": "bad-boys",
+      "ha": "Home",
+      "venue": "",
+      "cat": "S.Development 2 Thessaloniki",
+      "isFuture": false,
+      "ts": null
+    },
+    {
+      "dateTime": "-",
+      "date": "-",
+      "time": "-",
+      "opponent": "Alley Oopsies",
+      "oppSlug": "alley-oopsies",
+      "ha": "Away",
+      "venue": "",
+      "cat": "S.Development 2 Thessaloniki",
+      "isFuture": false,
+      "ts": null
+    },
+    {
+      "dateTime": "-",
+      "date": "-",
+      "time": "-",
+      "opponent": "Tumbai Chocolate",
+      "oppSlug": "tumbai-chocolate",
+      "ha": "Home",
+      "venue": "",
+      "cat": "S.Development 2 Thessaloniki",
+      "isFuture": false,
+      "ts": null
+    },
+    {
+      "dateTime": "-",
+      "date": "-",
+      "time": "-",
+      "opponent": "East Side Pylaia",
+      "oppSlug": "east-side-pylaia",
+      "ha": "Away",
+      "venue": "",
+      "cat": "S.Development 2 Thessaloniki",
+      "isFuture": false,
+      "ts": null
+    },
+    {
+      "dateTime": "-",
+      "date": "-",
+      "time": "-",
+      "opponent": "ΠΟΠ84",
+      "oppSlug": "pop84",
+      "ha": "Away",
+      "venue": "",
+      "cat": "S.Development 2 Thessaloniki",
+      "isFuture": false,
+      "ts": null
+    },
+    {
+      "dateTime": "-",
+      "date": "-",
+      "time": "-",
+      "opponent": "The Toy Men",
+      "oppSlug": "the-toy-men",
+      "ha": "Home",
+      "venue": "",
+      "cat": "S.Development 2 Thessaloniki",
+      "isFuture": false,
+      "ts": null
     }
   ],
   "results": [
     {
       "date": "26/04/2026",
       "opponent": "Golden Rail Warriors",
-      "oppSlug": "golden-rail-warriors",
+      "oppSlug": "",
       "ts": 47,
       "os": 63,
       "win": false,
       "ha": "Away",
       "cat": "W.Development 2 Thessaloniki",
-      "gameId": ""
+      "gameId": "36181"
     },
     {
       "date": "23/04/2026",
       "opponent": "ΠΟΠ84",
-      "oppSlug": "pop84",
+      "oppSlug": "",
       "ts": 51,
       "os": 54,
       "win": false,
       "ha": "Away",
       "cat": "W.Development 2 Thessaloniki",
-      "gameId": ""
+      "gameId": "35061"
     },
     {
       "date": "31/03/2026",
       "opponent": "ΠΟΠ84",
-      "oppSlug": "pop84",
+      "oppSlug": "",
       "ts": 50,
       "os": 46,
       "win": true,
       "ha": "Home",
       "cat": "W.Development 2 Thessaloniki",
-      "gameId": ""
+      "gameId": "35060"
     },
     {
       "date": "28/03/2026",
       "opponent": "The Toy Men",
-      "oppSlug": "the-toy-men",
+      "oppSlug": "",
       "ts": 67,
       "os": 61,
       "win": true,
       "ha": "Home",
       "cat": "W.Development 2 Thessaloniki",
-      "gameId": ""
+      "gameId": "34991"
     },
     {
       "date": "21/03/2026",
       "opponent": "The Toy Men",
-      "oppSlug": "the-toy-men",
+      "oppSlug": "",
       "ts": 53,
       "os": 54,
       "win": false,
       "ha": "Away",
       "cat": "W.Development 2 Thessaloniki",
-      "gameId": ""
+      "gameId": "34990"
     },
     {
       "date": "15/03/2026",
       "opponent": "Amino Animo",
-      "oppSlug": "amino-anino",
+      "oppSlug": "",
       "ts": 51,
       "os": 72,
       "win": false,
       "ha": "Home",
       "cat": "W.Development 2 Thessaloniki",
-      "gameId": ""
+      "gameId": "34888"
     },
     {
       "date": "07/03/2026",
       "opponent": "Volcanos BC",
-      "oppSlug": "volcanos-bc",
+      "oppSlug": "",
       "ts": 70,
       "os": 38,
       "win": true,
       "ha": "Away",
       "cat": "W.Development 2 Thessaloniki",
-      "gameId": ""
+      "gameId": "34837"
     },
     {
       "date": "01/03/2026",
       "opponent": "SKG Sonics",
-      "oppSlug": "skg-sonics",
+      "oppSlug": "",
       "ts": 52,
       "os": 59,
       "win": false,
       "ha": "Home",
       "cat": "W.Development 2 Thessaloniki",
-      "gameId": ""
+      "gameId": "34374"
     },
     {
       "date": "20/02/2026",
       "opponent": "ΠΟΠ84",
-      "oppSlug": "pop84",
+      "oppSlug": "",
       "ts": 45,
       "os": 62,
       "win": false,
       "ha": "Away",
       "cat": "W.Development 2 Thessaloniki",
-      "gameId": ""
+      "gameId": "34216"
     },
     {
       "date": "14/02/2026",
       "opponent": "Jazz Est. 2022",
-      "oppSlug": "jazz-2022",
+      "oppSlug": "",
       "ts": 52,
       "os": 58,
       "win": false,
       "ha": "Home",
       "cat": "W.Development 2 Thessaloniki",
-      "gameId": ""
+      "gameId": "34118"
     },
     {
       "date": "07/02/2026",
       "opponent": "Wild Goats",
-      "oppSlug": "wild-goats",
+      "oppSlug": "",
       "ts": 73,
       "os": 55,
       "win": true,
       "ha": "Away",
       "cat": "W.Development 2 Thessaloniki",
-      "gameId": ""
+      "gameId": "34057"
     },
     {
       "date": "31/01/2026",
       "opponent": "Carta Blanca",
-      "oppSlug": "carta-blanca",
+      "oppSlug": "",
       "ts": 71,
       "os": 52,
       "win": true,
       "ha": "Away",
       "cat": "W.Development 2 Thessaloniki",
-      "gameId": ""
+      "gameId": "33992"
     },
     {
       "date": "25/01/2026",
       "opponent": "Sunday Jams",
-      "oppSlug": "sunday-jams",
+      "oppSlug": "",
       "ts": 67,
       "os": 58,
       "win": true,
       "ha": "Home",
       "cat": "W.Development 2 Thessaloniki",
-      "gameId": ""
+      "gameId": "33614"
     },
     {
       "date": "17/01/2026",
       "opponent": "Pick n' Coc",
-      "oppSlug": "pic-n-coc",
+      "oppSlug": "",
       "ts": 53,
       "os": 46,
       "win": true,
       "ha": "Away",
       "cat": "W.Development 2 Thessaloniki",
-      "gameId": ""
+      "gameId": "33603"
     },
     {
       "date": "20/12/2025",
       "opponent": "Alley Oopsies",
-      "oppSlug": "alley-oopsies",
+      "oppSlug": "",
       "ts": 58,
       "os": 36,
       "win": true,
       "ha": "Home",
       "cat": "W.Development 2 Thessaloniki",
-      "gameId": ""
+      "gameId": "33583"
     },
     {
       "date": "13/12/2025",
       "opponent": "Amino Animo",
-      "oppSlug": "amino-anino",
+      "oppSlug": "",
       "ts": 77,
       "os": 86,
       "win": false,
       "ha": "Away",
       "cat": "W.Development 2 Thessaloniki",
-      "gameId": ""
+      "gameId": "33574"
     },
     {
       "date": "06/12/2025",
       "opponent": "Volcanos BC",
-      "oppSlug": "volcanos-bc",
+      "oppSlug": "",
       "ts": 71,
       "os": 19,
       "win": true,
       "ha": "Home",
       "cat": "W.Development 2 Thessaloniki",
-      "gameId": ""
+      "gameId": "31443"
     },
     {
       "date": "30/11/2025",
       "opponent": "SKG Sonics",
-      "oppSlug": "skg-sonics",
+      "oppSlug": "",
       "ts": 51,
       "os": 63,
       "win": false,
       "ha": "Away",
       "cat": "W.Development 2 Thessaloniki",
-      "gameId": ""
+      "gameId": "31434"
     },
     {
       "date": "20/11/2025",
       "opponent": "ΠΟΠ84",
-      "oppSlug": "pop84",
+      "oppSlug": "",
       "ts": 41,
       "os": 61,
       "win": false,
       "ha": "Home",
       "cat": "W.Development 2 Thessaloniki",
-      "gameId": ""
+      "gameId": "31425"
     },
     {
       "date": "16/11/2025",
       "opponent": "Jazz Est. 2022",
-      "oppSlug": "jazz-2022",
+      "oppSlug": "",
       "ts": 37,
       "os": 79,
       "win": false,
       "ha": "Away",
       "cat": "W.Development 2 Thessaloniki",
-      "gameId": ""
+      "gameId": "31415"
     },
     {
       "date": "03/11/2025",
       "opponent": "Wild Goats",
-      "oppSlug": "wild-goats",
+      "oppSlug": "",
       "ts": 59,
       "os": 54,
       "win": true,
       "ha": "Home",
       "cat": "W.Development 2 Thessaloniki",
-      "gameId": ""
+      "gameId": "31404"
     },
     {
       "date": "31/10/2025",
       "opponent": "Carta Blanca",
-      "oppSlug": "carta-blanca",
+      "oppSlug": "",
       "ts": 71,
       "os": 38,
       "win": true,
       "ha": "Home",
       "cat": "W.Development 2 Thessaloniki",
-      "gameId": ""
+      "gameId": "31393"
     },
     {
       "date": "18/10/2025",
       "opponent": "Sunday Jams",
-      "oppSlug": "sunday-jams",
+      "oppSlug": "",
       "ts": 63,
       "os": 50,
       "win": true,
       "ha": "Away",
       "cat": "W.Development 2 Thessaloniki",
-      "gameId": ""
+      "gameId": "31382"
     },
     {
       "date": "11/10/2025",
       "opponent": "Pick n' Coc",
-      "oppSlug": "pic-n-coc",
+      "oppSlug": "",
       "ts": 63,
       "os": 67,
       "win": false,
       "ha": "Home",
       "cat": "W.Development 2 Thessaloniki",
-      "gameId": ""
+      "gameId": "31371"
     },
     {
       "date": "27/09/2025",
       "opponent": "Alley Oopsies",
-      "oppSlug": "alley-oopsies",
+      "oppSlug": "",
       "ts": 72,
       "os": 38,
       "win": true,
       "ha": "Away",
       "cat": "W.Development 2 Thessaloniki",
-      "gameId": ""
+      "gameId": "31351"
     }
   ],
   "players": [
