@@ -32,7 +32,6 @@ body {
 .load-logo { width:80px; mix-blend-mode:lighten; }
 .load-bar-wrap { width:200px; height:2px; background:var(--border2); border-radius:2px; overflow:hidden; }
 .load-bar { height:100%; width:0%; background:var(--orange); border-radius:2px; transition:width 0.3s ease; box-shadow:0 0 10px rgba(255,92,0,0.5); }
-.load-text { font-family:var(--mono); font-size:0.6rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); }
 
 /* TICKER */
 .ticker-wrap { width:100%; background:var(--orange); overflow:hidden; height:28px; display:flex; align-items:center; position:relative; z-index:10; }
@@ -135,12 +134,12 @@ body {
 .stat-hi { color:var(--orange) !important; font-weight:700 !important; }
 
 /* ROSTER */
-.roster-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:1rem; padding:1rem; background:var(--bg2); border:1px solid var(--border2); border-radius:8px; }
+.roster-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1.2rem; padding:1.2rem; background:var(--bg2); border:1px solid var(--border2); border-radius:8px; }
 
 /* 3: Card background gradient */
 .player-tile {
   background:linear-gradient(135deg,#111111,#161616);
-  padding:1.4rem 0.75rem 1.2rem;
+  padding:1.8rem 1rem 1.5rem;
   display:flex; flex-direction:column; align-items:center; gap:0.45rem;
   cursor:default; transition:all 0.25s; border-radius:12px;
   border:1px solid var(--border2);
@@ -165,7 +164,7 @@ body {
 
 /* 2: Ring — orange for photo, grey for initials */
 .p-avatar {
-  width:72px; height:72px; border-radius:50%;
+  width:90px; height:90px; border-radius:50%;
   border:2px solid #333;
   background:linear-gradient(135deg,#1a1a1a,#0f0f0f);
   display:flex; align-items:center; justify-content:center;
@@ -179,16 +178,16 @@ body {
 /* 1: Jersey number badge */
 .p-badge {
   position:absolute; bottom:0; right:-2px;
-  width:22px; height:22px; border-radius:50%;
+  width:26px; height:26px; border-radius:50%;
   background:var(--orange); border:2px solid #111;
   display:flex; align-items:center; justify-content:center;
-  font-family:var(--mono); font-size:0.5rem; font-weight:700;
+  font-family:var(--mono); font-size:0.58rem; font-weight:700;
   color:#000; letter-spacing:0; line-height:1;
 }
 .p-badge:empty { display:none; }
 
-.p-surname { font-family:var(--display); font-size:0.95rem; letter-spacing:0.06em; color:var(--white); text-align:center; line-height:1.1; transition:color 0.2s; }
-.p-name { font-family:var(--mono); font-size:0.52rem; letter-spacing:0.04em; color:#888; text-align:center; line-height:1.4; }
+.p-surname { font-family:var(--display); font-size:1.15rem; letter-spacing:0.06em; color:var(--white); text-align:center; line-height:1.1; transition:color 0.2s; }
+.p-name { font-family:var(--mono); font-size:0.62rem; letter-spacing:0.04em; color:#888; text-align:center; line-height:1.4; }
 .p-pos  { font-family:var(--mono); font-size:0.5rem; letter-spacing:0.15em; color:var(--muted); }
 
 /* 4: Stat pills */
@@ -225,7 +224,7 @@ body {
   .scoreboard-header { grid-template-columns:1fr 1fr; }
   .logo-center { display:none; }
   .stat-strip { grid-template-columns:repeat(2,1fr); }
-  .roster-grid { grid-template-columns:repeat(4,1fr); }
+  .roster-grid { grid-template-columns:repeat(3,1fr); }
   .countdown-board { grid-template-columns:1fr; }
   .cd-clock { justify-content:flex-start; }
 }
@@ -233,7 +232,7 @@ body {
   .scoreboard-header { grid-template-columns:1fr; }
   .header-right { align-items:flex-start; }
   .stat-strip { grid-template-columns:repeat(2,1fr); }
-  .roster-grid { grid-template-columns:repeat(3,1fr); }
+  .roster-grid { grid-template-columns:repeat(2,1fr); }
 }
 @media(max-width:420px) { .roster-grid { grid-template-columns:repeat(2,1fr); } }
 </style>
@@ -243,10 +242,9 @@ body {
 <div id="loading">
   <img src="logo_v2.png" alt="Air Ballers" class="load-logo">
   <div class="load-bar-wrap"><div class="load-bar" id="load-bar"></div></div>
-  <div class="load-text" id="load-text">Connecting to Basketaki...</div>
 </div>
 
-<div class="ticker-wrap"><div class="ticker-track" id="ticker"></div></div>
+<div class="ticker-wrap"><div class="ticker-track" id="ticker"><span class="ticker-item">AIR BALLERS <span class="ticker-sep">·</span> THESSALONIKI AMATEUR LEAGUE <span class="ticker-sep">·</span> 2025–26 SEASON</span><span class="ticker-item">AIR BALLERS <span class="ticker-sep">·</span> THESSALONIKI AMATEUR LEAGUE <span class="ticker-sep">·</span> 2025–26 SEASON</span></div></div>
 
 <div class="arena">
 
@@ -380,43 +378,15 @@ body {
 
 <script>
 // ─── CONFIG ──────────────────────────────────────────────────────────────────
-const PROXY = 'https://api.codetabs.com/v1/proxy?quest=';
-const BASE  = 'https://www.basketaki.com';
-const CDN   = 'https://basketaki-web.b-cdn.net';
-const TEAM  = 'air-ballers';
+const CDN  = 'https://basketaki-web.b-cdn.net';
+const BASE = 'https://www.basketaki.com';
 
 // ─── UTILS ───────────────────────────────────────────────────────────────────
 const $  = id => document.getElementById(id);
-const px = url => fetch(PROXY + encodeURIComponent(url)).then(r => { if(!r.ok) throw new Error(r.status); return r.text(); });
-const ph = html => new DOMParser().parseFromString(html, 'text/html');
-const td = (el, i) => { const t = el.querySelectorAll('td'); return t[i] ? t[i].textContent.trim() : ''; };
 const num = s => parseFloat((s||'0').replace(',','.')) || 0;
 
-// ─── NAME HELPERS ─────────────────────────────────────────────────────────────
-function toTitleCase(str) {
-  // Handles Greek + Latin, preserves dots (e.g. "Εμμ.")
-  return str.replace(/\S+/g, w => {
-    if (w.endsWith('.')) return w.charAt(0).toUpperCase() + w.slice(1).toLowerCase();
-    return w.charAt(0).toUpperCase() + w.slice(1).toLowerCase();
-  });
-}
-
-function formatPlayerName(fullName) {
-  // Input: "ΠΑΝΟΥΧΟΣ ΑΡΓ. ΝΙΚΟΛΑΟΣ" or "Ανδρεαδάκης Εμμ. Νικόλαος"
-  // Output: { surname: "Πανούχος", firstName: "Νικόλαος" }
-  const parts = fullName.trim().split(/\s+/);
-  // Surname is always first word
-  const surname = toTitleCase(parts[0]);
-  // First name is the last word (skip middle abbreviation like "ΑΡΓ.")
-  // Filter out abbreviations (words ending with dot or 2-4 chars ending in dot)
-  const nameParts = parts.slice(1).filter(p => !p.match(/^[Α-Ωα-ωA-Za-z]{2,4}\.$/));
-  const firstName = nameParts.length > 0 ? toTitleCase(nameParts[nameParts.length - 1]) : '';
-  return { surname, firstName };
-}
-
-function progress(pct, msg) {
+function progress(pct) {
   $('load-bar').style.width = pct + '%';
-  $('load-text').textContent = msg;
 }
 function hideLoader() {
   const el = $('loading');
@@ -426,122 +396,67 @@ function hideLoader() {
 function logoImg(slug) {
   return slug ? `<img src="${CDN}/teams/${slug}.png" class="td-logo" alt="" onerror="this.style.display='none'">` : '';
 }
-function slugFrom(el) {
-  const a = el.querySelector('a[href*="/teams/"]');
-  if (!a) return '';
-  const m = a.href.match(/\/teams\/([^/]+)\//);
-  return m ? m[1] : '';
+
+// ─── NAME HELPERS ─────────────────────────────────────────────────────────────
+function toTitleCase(str) {
+  return str.replace(/\S+/g, w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase());
 }
 
 // ─── SCHEDULE ────────────────────────────────────────────────────────────────
-// TD layout: [0]=num [1]=date+time [2]=opponent [3]=home/away [4]=category [5]=season [6]=preview [7]=venue
-function buildSchedule(doc) {
-  const rows = doc.querySelectorAll('table tbody tr');
-  let html = '', nextGame = null;
-  const now = new Date();
-
-  rows.forEach((tr, i) => {
-    const tds = tr.querySelectorAll('td');
-    if (tds.length < 5) return;
-
-    const dateTime = tds[1].textContent.trim();   // "09/05/2026 22:00"
-    const oppName  = (tds[2].querySelector('a') || tds[2]).textContent.trim();
-    const oppSlug  = slugFrom(tds[2]);
-    const ha       = tds[3].textContent.trim();    // Home / Away
-    const cat      = tds[4].textContent.trim();
-    const venue    = tds[7] ? tds[7].textContent.trim() : '';
-
-    // Parse datetime
-    let gameDate = null;
-    const m = dateTime.match(/(\d{2})\/(\d{2})\/(\d{4})\s+(\d{2}):(\d{2})/);
-    if (m) gameDate = new Date(+m[3], +m[2]-1, +m[1], +m[4], +m[5]);
-
-    const isFuture = gameDate && gameDate > now;
-    const isNext   = isFuture && !nextGame;
-    if (isNext) nextGame = { dateTime, oppName, ha, venue, cat, gameDate };
-
-    const odd   = i%2===0 ? 'row-odd' : '';
-    const cls   = isNext ? 'next-row' : odd;
-    const logo  = logoImg(oppSlug);
-    const mark  = isNext ? ' <span style="color:var(--orange);font-family:var(--mono);font-size:0.6rem;">◀ NEXT</span>' : '';
-
+function buildSchedule(schedule) {
+  let html = '';
+  schedule.forEach((g, i) => {
+    const logo  = logoImg(g.oppSlug);
+    const cls   = g.isFuture && i === schedule.findIndex(x => x.isFuture)
+                  ? 'next-row' : (i%2===0 ? 'row-odd' : '');
+    const mark  = cls === 'next-row'
+                  ? ' <span style="color:var(--orange);font-family:var(--mono);font-size:0.6rem;">◀ NEXT</span>' : '';
     html += `<tr class="${cls}">
-      <td class="td-date">${dateTime}${mark}</td>
-      <td class="td-opp">${logo}${oppName}</td>
-      <td class="td-date">${ha}</td>
-      <td class="td-date">${venue}</td>
-      <td class="td-date">${cat}</td>
+      <td class="td-date">${g.dateTime}${mark}</td>
+      <td class="td-opp">${logo}${g.opponent}</td>
+      <td class="td-date">${g.ha}</td>
+      <td class="td-date">${g.venue}</td>
+      <td class="td-date">${g.cat}</td>
     </tr>`;
   });
-
   $('schedule-body').innerHTML = html || `<tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--muted);font-family:var(--mono);font-size:0.7rem;">No upcoming games</td></tr>`;
-  return nextGame;
 }
 
 // ─── RESULTS ─────────────────────────────────────────────────────────────────
-// Basketaki results page: date | opponent(team-meta) | W/L | score | status | category | season | article
-function buildResults(doc) {
-  const rows = doc.querySelectorAll('table.team-result tbody tr');
+function buildResults(results) {
   let html = '';
-  const results = [];
-
-  rows.forEach((tr, i) => {
-    const tds = tr.querySelectorAll('td');
-    if (tds.length < 5) return;
-
-    const date    = tds[0].textContent.trim();
-    const oppName = (tds[1].querySelector('.team-meta__name a') || tds[1]).textContent.trim();
-    const oppSlug = slugFrom(tds[1]);
-    const wl      = tds[2].textContent.trim();   // W or L
-    const score   = tds[3].textContent.trim();   // "63 - 47"
-    const ha      = tds[4].textContent.trim();   // Home / Away
-    const cat     = tds[5] ? tds[5].textContent.trim() : '';
-    const gameHref= tds[7] ? (tds[7].querySelector('a')||{}).href||'' : '';
-    const gameId  = (gameHref.match(/\/games\/(\d+)/)||[])[1] || '';
-
-    // Normalise so our score is always first
-    let ts = 0, os = 0;
-    const sm = score.match(/(\d+)\s*-\s*(\d+)/);
-    if (sm) {
-      if (ha.toLowerCase() === 'home') { ts = +sm[1]; os = +sm[2]; }
-      else                              { ts = +sm[2]; os = +sm[1]; }
-    }
-    const win = wl === 'W';
-    results.push({ date, oppName, ts, os, win });
-
+  results.forEach((r, i) => {
+    const logo = logoImg(r.oppSlug);
+    const link = r.gameId ? `<a href="${BASE}/games/${r.gameId}" target="_blank" rel="noopener" class="game-link">▶ Preview</a>` : '—';
     const odd  = i%2===0 ? 'row-odd' : '';
-    const logo = logoImg(oppSlug);
-    const link = gameId ? `<a href="${BASE}/games/${gameId}" target="_blank" rel="noopener" class="game-link">▶ Preview</a>` : '—';
-
     html += `<tr class="${odd}">
-      <td class="td-date">${date}</td>
-      <td class="td-opp">${logo}${oppName}</td>
-      <td class="td-score">${ts}–${os}</td>
-      <td><span class="res-badge ${win?'res-w':'res-l'}">${win?'WIN':'LOSS'}</span></td>
-      <td class="td-date">${cat}</td>
+      <td class="td-date">${r.date}</td>
+      <td class="td-opp">${logo}${r.opponent}</td>
+      <td class="td-score">${r.ts}–${r.os}</td>
+      <td><span class="res-badge ${r.win?'res-w':'res-l'}">${r.win?'WIN':'LOSS'}</span></td>
+      <td class="td-date">${r.cat}</td>
       <td>${link}</td>
     </tr>`;
   });
 
   if (!html) {
     $('results-body').innerHTML = `<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--muted);font-family:var(--mono);font-size:0.7rem;">No results found</td></tr>`;
-    return results;
+    return;
   }
-  // Split into first 10 and the rest
-  const parser = new DOMParser();
+
+  // Show first 10, rest behind "View More"
+  const parser  = new DOMParser();
   const tempDoc = parser.parseFromString(`<table>${html}</table>`, 'text/html');
   const allRows = [...tempDoc.querySelectorAll('tr')];
   const first10 = allRows.slice(0, 10).map(r => r.outerHTML).join('');
   const rest    = allRows.slice(10).map(r => r.outerHTML).join('');
   $('results-body').innerHTML = first10;
   if (rest) {
-    // Add hidden rows container + View More button
     const hiddenDiv = document.createElement('tbody');
     hiddenDiv.id = 'results-extra';
     hiddenDiv.style.display = 'none';
     hiddenDiv.innerHTML = rest;
     $('results-body').parentNode.appendChild(hiddenDiv);
-    // Add button row
     const btnRow = document.createElement('tr');
     btnRow.id = 'view-more-row';
     btnRow.innerHTML = `<td colspan="6" style="text-align:center;padding:0.75rem;border-top:1px solid var(--border2);">
@@ -551,96 +466,37 @@ function buildResults(doc) {
     </td>`;
     $('results-body').parentNode.appendChild(btnRow);
   }
-  return results;
 }
 
-// ─── PLAYER STATS ────────────────────────────────────────────────────────────
-// Headers (confirmed): Παίχτης|ΑΓ|MVP|Λεπτα|(ΜΟ)|Ποντοι|(ΜΟ)|EFF|EFF(ΜΟ)|ΡΜΠ|Επιθ|Αμυ|(ΜΟ)|ΑΣΙ|ΑΣΙ(ΜΟ)|ΚΛΨ|ΚΛΨ(ΜΟ)|ΛΑΘ|ΛΑΘ(ΜΟ)|ΚΟΨ|ΚΟΨ(ΜΟ)|ΒOΛΕΣ|%|2Ποντα|%|3Ποντα|%
-// TD[0]=name  TD[1]=GP  TD[2]=MVP  TD[3]=total mins  TD[4]=mins avg
-// TD[5]=total pts  TD[6]=PPG  TD[7]=total EFF  TD[8]=EFF avg
-// TD[9]=total reb  TD[10]=off reb  TD[11]=def reb  TD[12]=RPG
-// TD[13]=total ast  TD[14]=APG  TD[15]=total stl  TD[16]=SPG
-// TD[17]=total to   TD[18]=TOPG  TD[19]=total fouls  TD[20]=fouls avg
-// TD[21]=FT m/a  TD[22]=FT%  TD[23]=2P m/a  TD[24]=2P%  TD[25]=3P m/a  TD[26]=3P%
-function buildStats(doc) {
-  // ONLY use the first table (Table 0) — others are season breakdowns with zeros
-  const firstTable = doc.querySelector('table');
-  if (!firstTable) {
-    $('stats-body').innerHTML = `<tr><td colspan="10" style="text-align:center;padding:2rem;color:var(--muted);font-family:var(--mono);font-size:0.7rem;">No stats found</td></tr>`;
-    return {};
-  }
-
-  const rows = firstTable.querySelectorAll('tbody tr');
-  let html = '';
-  let count = 0;
-  const playerStats = {};
-
-  rows.forEach((tr, i) => {
-    const tds = tr.querySelectorAll('td');
-    if (tds.length < 10) return;
-
-    const name = tds[0].textContent.trim();
-    if (!name || name.length < 2) return;
-
-    const gp   = tds[1].textContent.trim();
-    const ppg  = tds[6].textContent.trim();   // Ποντοι (ΜΟ) = PPG
-    const rpg  = tds[12].textContent.trim();  // ΡΜΠ (ΜΟ) = RPG
-    const apg  = tds[14].textContent.trim();  // ΑΣΙ (ΜΟ) = APG
-    const spg  = tds[16].textContent.trim();  // ΚΛΨ (ΜΟ) = SPG
-    const ftp  = tds[22].textContent.trim();  // FT%
-    const twop = tds[24].textContent.trim();  // 2P%
-    const thrp = tds[26].textContent.trim();  // 3P%
-
-    // Greek name format: "Lastname Firstname" — first word is surname
-    const parts    = name.split(' ');
-    const lastName = parts[0]; // first word = Greek surname
-    playerStats[lastName] = { ppg, rpg, apg };
-
-    const ppgNum = num(ppg);
-    const odd    = i%2===0 ? 'row-odd' : '';
+// ─── PLAYER STATS TABLE ───────────────────────────────────────────────────────
+function buildStats(players) {
+  let html = '', count = 0;
+  players.forEach((p, i) => {
+    const ppgNum = num(p.ppg);
     const hiPpg  = ppgNum >= 10 ? 'stat-hi' : '';
-
+    const odd    = i%2===0 ? 'row-odd' : '';
     html += `<tr class="${odd}">
-      <td class="stat-name">${name}</td>
-      <td class="r">${gp}</td>
-      <td class="r ${hiPpg}">${ppg}</td>
-      <td class="r">${rpg}</td>
-      <td class="r">${apg}</td>
-      <td class="r">${spg}</td>
-      <td class="r">${ftp}</td>
-      <td class="r">${twop}</td>
-      <td class="r">${thrp}</td>
+      <td class="stat-name">${p.raw}</td>
+      <td class="r">${p.gp}</td>
+      <td class="r ${hiPpg}">${p.ppg}</td>
+      <td class="r">${p.rpg}</td>
+      <td class="r">${p.apg}</td>
+      <td class="r">${p.spg}</td>
+      <td class="r">${p.ftp}</td>
+      <td class="r">${p.twop}</td>
+      <td class="r">${p.thrp}</td>
     </tr>`;
     count++;
   });
-
-  $('stats-body').innerHTML = html || `<tr><td colspan="10" style="text-align:center;padding:2rem;color:var(--muted);font-family:var(--mono);font-size:0.7rem;">No stats found</td></tr>`;
+  $('stats-body').innerHTML = html || `<tr><td colspan="9" style="text-align:center;padding:2rem;color:var(--muted);font-family:var(--mono);font-size:0.7rem;">No stats found</td></tr>`;
   $('stats-label').textContent = `Player Stats — ${count} Players`;
-  return playerStats;
 }
 
-// ─── ROSTER ──────────────────────────────────────────────────────────────────
-function buildRoster(doc, playerStats) {
-  const firstTable = doc.querySelector('table');
-  if (!firstTable) { loadCSVRoster(playerStats); return; }
-
-  const rows = firstTable.querySelectorAll('tbody tr');
-  const basketakiPlayers = [];
-  rows.forEach(tr => {
-    const tds = tr.querySelectorAll('td');
-    if (tds.length < 2) return;
-    const fullName = tds[0].textContent.trim();
-    if (!fullName || fullName.length < 2) return;
-    basketakiPlayers.push(fullName);
-  });
-
-  if (!basketakiPlayers.length) { loadCSVRoster(playerStats); return; }
-
-  // Load players.csv to get photo mappings via name_gr column
+// ─── ROSTER CARDS ────────────────────────────────────────────────────────────
+function buildRoster(players) {
+  // Load players.csv for photo + number mapping
   fetch('players.csv').then(r => r.text()).then(text => {
-    const lines   = text.trim().split(/
-?
-/);
+    const lines   = text.trim().split(/\r?\n/);
     const delim   = lines[0].includes(';') ? ';' : ',';
     const headers = lines[0].split(delim).map(h => h.trim().replace(/^﻿/,''));
     const csvRows = lines.slice(1).map(l => {
@@ -648,45 +504,34 @@ function buildRoster(doc, playerStats) {
       const o = {}; headers.forEach((h,i) => o[h] = v[i]||''); return o;
     });
 
-    // Build lookup: name_gr (normalised) → { photo, number, name_en }
+    // Build lookup: name_gr uppercased → { photo, number }
     const photoMap = {};
     csvRows.forEach(r => {
-      const gr = (r.name_gr || '').trim().toUpperCase();
-      if (gr) photoMap[gr] = { photo: r.photo||'', number: r.number||'', name_en: r.name_en||'' };
+      const gr = (r.name_gr||'').trim().toUpperCase();
+      if (gr) photoMap[gr] = { photo: r.photo||'', number: r.number||'' };
     });
 
     let html = '';
-    basketakiPlayers.forEach(fullName => {
-      // 6: Normalise name — title case, strip middle abbreviation
-      const { surname, firstName } = formatPlayerName(fullName);
-      const rawSurname = fullName.trim().split(/\s+/)[0]; // for stats lookup key
-
-      // initials from normalised names
-      const ini = (surname[0]||'?') + (firstName[0]||'');
-
-      // Lookup by normalised Greek name (uppercase for matching)
-      const key     = fullName.trim().toUpperCase();
+    players.forEach(p => {
+      const key     = p.raw.trim().toUpperCase();
       const csvData = photoMap[key] || {};
       const photo   = csvData.photo || '';
       const number  = csvData.number || '';
-
-      // 2: ring class
+      const ini     = (p.surname[0]||'?') + (p.firstName[0]||'');
       const ringCls = photo ? 'has-photo' : '';
 
       let avatarInner;
       if (photo) {
-        avatarInner = `<img src="images/${photo}" alt="${surname}" onerror="this.parentElement.innerHTML='${ini}';this.parentElement.classList.remove('has-photo')">`;
+        avatarInner = `<img src="images/${photo}" alt="${p.surname}" onerror="this.parentElement.innerHTML='${ini}';this.parentElement.classList.remove('has-photo')">`;
       } else {
         avatarInner = ini;
       }
 
-      // Stats lookup using original surname (first word, any case)
-      const stats = playerStats[rawSurname] || {};
-      const pills = stats.ppg ? `
+      const pills = p.ppg ? `
         <div class="p-pills">
-          <span class="p-pill ppg"><span class="p-pill-label">PPG</span>${stats.ppg}</span>
-          <span class="p-pill rpg"><span class="p-pill-label">RPG</span>${stats.rpg}</span>
-          <span class="p-pill apg"><span class="p-pill-label">APG</span>${stats.apg||'—'}</span>
+          <span class="p-pill ppg"><span class="p-pill-label">PPG</span>${p.ppg}</span>
+          <span class="p-pill rpg"><span class="p-pill-label">RPG</span>${p.rpg}</span>
+          <span class="p-pill apg"><span class="p-pill-label">APG</span>${p.apg||'—'}</span>
         </div>` : '';
 
       html += `<div class="player-tile">
@@ -694,119 +539,84 @@ function buildRoster(doc, playerStats) {
           <div class="p-avatar ${ringCls}">${avatarInner}</div>
           <div class="p-badge">${number}</div>
         </div>
-        <div class="p-surname">${surname}</div>
-        <div class="p-name">${firstName}</div>
+        <div class="p-surname">${p.surname}</div>
+        <div class="p-name">${p.firstName}</div>
         ${pills}
       </div>`;
     });
 
-    $('roster-label').textContent = `Active Roster — ${basketakiPlayers.length} Players`;
-    $('roster-grid').innerHTML = html;
-  }).catch(() => loadCSVRoster(playerStats));
-}
-
-function loadCSVRoster(playerStats) {
-  fetch('players.csv').then(r => r.text()).then(text => {
-    const lines  = text.trim().split(/\r?\n/);
-    const delim  = lines[0].includes(';') ? ';' : ',';
-    const headers= lines[0].split(delim).map(h => h.trim().replace(/^\uFEFF/,''));
-    const rows   = lines.slice(1).map(l => {
-      const v = l.split(delim).map(x => x.trim());
-      const o = {}; headers.forEach((h,i) => o[h] = v[i]||''); return o;
-    }).filter(r => r.name || r.Name);
-
-    let html = '';
-    rows.forEach(p => {
-      const name   = (p.name||p.Name||'').trim();
-      const number = (p.number||p.Number||'').trim();
-      const pos    = (p.position||p.Position||'').trim();
-      const photo  = (p.photo||p.Photo||'').trim();
-      const parts  = name.split(' ');
-      const ini    = parts.slice(0,2).map(w=>w[0]||'').join('').toUpperCase();
-      const last   = (parts[parts.length-1]||name).toUpperCase();
-      const stats  = playerStats[parts[parts.length-1]] || {};
-      const statLine = stats.ppg ? `${stats.ppg} PPG · ${stats.rpg} RPG` : '';
-      const avatar = photo
-        ? `<img src="images/${photo}" alt="${name}" onerror="this.parentElement.innerHTML='${ini}'">`
-        : ini;
-
-      html += `<div class="player-tile">
-        <div class="p-number">#${number}</div>
-        <div class="p-avatar">${avatar}</div>
-        <div class="p-name">${last}</div>
-        <div class="p-pos">${pos}</div>
-        ${statLine ? `<div class="p-stat">${statLine}</div>` : ''}
-      </div>`;
-    });
-
-    $('roster-label').textContent = `Active Roster — ${rows.length} Players`;
+    $('roster-label').textContent = `Active Roster — ${players.length} Players`;
     $('roster-grid').innerHTML = html || `<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--muted);font-family:var(--mono);font-size:0.7rem;background:var(--panel);">No players found</div>`;
   }).catch(() => {
-    $('roster-grid').innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--muted);font-family:var(--mono);font-size:0.7rem;background:var(--panel);">Could not load roster</div>`;
+    // Render without photos
+    let html = '';
+    players.forEach(p => {
+      const ini = (p.surname[0]||'?') + (p.firstName[0]||'');
+      const pills = p.ppg ? `
+        <div class="p-pills">
+          <span class="p-pill ppg"><span class="p-pill-label">PPG</span>${p.ppg}</span>
+          <span class="p-pill rpg"><span class="p-pill-label">RPG</span>${p.rpg}</span>
+          <span class="p-pill apg"><span class="p-pill-label">APG</span>${p.apg||'—'}</span>
+        </div>` : '';
+      html += `<div class="player-tile">
+        <div class="p-avatar-wrap">
+          <div class="p-avatar">${ini}</div>
+          <div class="p-badge"></div>
+        </div>
+        <div class="p-surname">${p.surname}</div>
+        <div class="p-name">${p.firstName}</div>
+        ${pills}
+      </div>`;
+    });
+    $('roster-label').textContent = `Active Roster — ${players.length} Players`;
+    $('roster-grid').innerHTML = html;
   });
 }
 
-// ─── HEADER & TICKER ─────────────────────────────────────────────────────────
-function buildHeader(results) {
-  const valid  = results.filter(r => r.ts > 0 || r.os > 0);
-  const wins   = valid.filter(r => r.win).length;
-  const losses = valid.length - wins;
-  const pct    = valid.length ? Math.round(wins/valid.length*100)+'%' : '—';
+// ─── HEADER ───────────────────────────────────────────────────────────────────
+function buildHeader(data) {
+  const { record, streak } = data;
+  $('hdr-w').textContent   = record.wins;
+  $('hdr-l').textContent   = record.losses;
+  $('hdr-pct').textContent = record.pct + '%';
 
-  $('hdr-w').textContent   = wins;
-  $('hdr-l').textContent   = losses;
-  $('hdr-pct').textContent = pct;
-
-  // Streak
-  let sc = 0, st = 'neutral';
-  if (results.length) {
-    const first = results[0].win ? 'win' : 'loss';
-    st = first;
-    for (const r of results) {
-      if ((r.win && first==='win')||(!r.win && first==='loss')) sc++;
-      else break;
-    }
-  }
   const chip = $('streak-chip');
-  const lbl  = st==='neutral' ? '—' : (st==='win'?'W':'L')+sc;
-  chip.textContent = '● Streak '+lbl;
-  chip.className   = 'streak-chip '+st;
+  const lbl  = streak.type === 'neutral' ? '—' : (streak.type==='win'?'W':'L') + streak.count;
+  chip.textContent = '● Streak ' + lbl;
+  chip.className   = 'streak-chip ' + streak.type;
 
-  // Last result stat cells
-  if (results.length) {
-    const last = results[0];
+  // Last result
+  if (data.results.length) {
+    const last = data.results[0];
     const sv   = $('st-score');
     sv.textContent = `${last.ts}–${last.os}`;
-    sv.className   = 'stat-val '+(last.win?'orange':'red');
-    $('st-last-opp').textContent = 'vs '+last.oppName;
+    sv.className   = 'stat-val ' + (last.win ? 'orange' : 'red');
+    $('st-last-opp').textContent = 'vs ' + last.opponent;
   }
+
+  // Streak cell
   const ss = $('st-streak');
   ss.textContent = lbl;
-  ss.className   = 'stat-val '+(st==='win'?'orange':st==='loss'?'red':'');
-  $('st-streak-sub').textContent = st==='win'?'Hot run 🔥':st==='loss'?'Bounce back time':'—';
-
-  return { wins, losses, pct, st, sc };
+  ss.className   = 'stat-val ' + (streak.type==='win'?'orange':streak.type==='loss'?'red':'');
+  $('st-streak-sub').textContent = streak.type==='win' ? 'Hot run 🔥' : streak.type==='loss' ? 'Bounce back time' : '—';
 }
 
-function buildNextGameUI(ng) {
+// ─── NEXT GAME ────────────────────────────────────────────────────────────────
+function buildNextGame(ng) {
   if (!ng) return;
-  const dtParts  = ng.dateTime.split(' ');
-  const datePart = dtParts[0] || ng.dateTime;
-  const timePart = dtParts[1] || '';
-
-  // Next Opponent card: name in large mono, time below, date smaller below that
-  $('st-opp').textContent  = ng.oppName;
-  $('st-time').textContent = timePart;
-  $('st-date').textContent = `${datePart} · ${ng.ha}`;
-
-  $('cd-opp').textContent   = ng.oppName.toUpperCase();
-  $('cd-date').textContent  = ng.dateTime;
-  $('cd-ha').textContent    = ng.ha;
-  $('cd-venue').textContent = ng.venue;
-
-  if (ng.gameDate) startCountdown(ng.gameDate);
+  $('st-opp').textContent         = ng.opponent;
+  $('st-time').textContent        = ng.ha;
+  $('st-date').textContent        = ng.date;
+  $('st-tipoff-time').textContent = ng.time;
+  $('st-venue').textContent       = ng.venue || '—';
+  $('cd-opp').textContent         = ng.opponent.toUpperCase();
+  $('cd-date').textContent        = ng.dateTime;
+  $('cd-ha').textContent          = ng.ha;
+  $('cd-venue').textContent       = ng.venue;
+  if (ng.ts) startCountdown(new Date(ng.ts));
 }
 
+// ─── COUNTDOWN ────────────────────────────────────────────────────────────────
 function startCountdown(target) {
   function tick() {
     const diff = target - new Date();
@@ -821,19 +631,22 @@ function startCountdown(target) {
   tick(); setInterval(tick, 30000);
 }
 
-function buildTicker(stats, ng) {
-  const opp = ng ? ng.oppName.toUpperCase() : '—';
-  const ha  = ng ? ng.ha.toUpperCase() : '';
+// ─── TICKER ───────────────────────────────────────────────────────────────────
+function buildTicker(data) {
+  const { record, streak, nextGame } = data;
+  const opp = nextGame ? nextGame.opponent.toUpperCase() : '—';
+  const ha  = nextGame ? nextGame.ha.toUpperCase() : '';
+  const sl  = streak.type==='neutral' ? '—' : (streak.type==='win'?'W':'L') + streak.count;
   const items = [
     `AIR BALLERS <span class="ticker-sep">·</span> THESSALONIKI AMATEUR LEAGUE`,
-    `SEASON 2025–26 <span class="ticker-sep">·</span> RECORD ${stats.wins}W – ${stats.losses}L`,
+    `SEASON 2025–26 <span class="ticker-sep">·</span> RECORD ${record.wins}W – ${record.losses}L`,
     `NEXT GAME <span class="ticker-sep">·</span> VS ${opp} <span class="ticker-sep">·</span> ${ha}`,
-    `WIN PCT ${stats.pct} <span class="ticker-sep">·</span> STREAK ${stats.st==='neutral'?'—':(stats.st==='win'?'W':'L')+stats.sc}`,
+    `WIN PCT ${record.pct}% <span class="ticker-sep">·</span> STREAK ${sl}`,
   ];
   $('ticker').innerHTML = [...items,...items].map(t=>`<span class="ticker-item">${t}</span>`).join('');
 }
 
-// ─── TOGGLE RESULTS ──────────────────────────────────────────────────────────
+// ─── TOGGLE RESULTS ───────────────────────────────────────────────────────────
 function toggleResults() {
   const extra = $('results-extra');
   const btn   = $('view-more-btn');
@@ -841,57 +654,58 @@ function toggleResults() {
   if (!extra) return;
   const isHidden = extra.style.display === 'none';
   extra.style.display = isHidden ? '' : 'none';
-  // Move the button row to always be last
   if (isHidden) {
     btn.textContent = '▲ Show Less';
     btn.style.color = 'var(--orange)';
     btn.style.borderColor = 'rgba(255,92,0,0.3)';
-    extra.parentNode.appendChild(row);
   } else {
-    const total = extra.querySelectorAll('tr').length + 10;
-    btn.textContent = `▼ View All ${total} Results`;
+    btn.textContent = `▼ View All ${extra.querySelectorAll('tr').length + 10} Results`;
     btn.style.color = '#888';
     btn.style.borderColor = 'var(--border2)';
-    extra.parentNode.appendChild(row);
   }
+  row.parentNode.appendChild(row);
 }
 
 // ─── MAIN ─────────────────────────────────────────────────────────────────────
 async function init() {
   try {
-    progress(10, 'Fetching schedule...');
-    const schedHTML = await px(`${BASE}/teams/${TEAM}/schedule`);
-    const schedDoc  = ph(schedHTML);
+    progress(20);
+    const res  = await fetch('data.json?t=' + Date.now());
+    if (!res.ok) throw new Error('data.json not found');
+    const data = await res.json();
 
-    progress(25, 'Parsing schedule...');
-    const nextGame = buildSchedule(schedDoc);
-    buildNextGameUI(nextGame);
+    progress(50);
+    buildSchedule(data.schedule || []);
 
-    progress(40, 'Fetching results...');
-    const resHTML = await px(`${BASE}/teams/${TEAM}/results`);
-    const resDoc  = ph(resHTML);
+    progress(65);
+    buildResults(data.results || []);
 
-    progress(55, 'Parsing game log...');
-    const results = buildResults(resDoc);
-    const hStats  = buildHeader(results);
-    buildTicker(hStats, nextGame);
+    progress(75);
+    buildStats(data.players || []);
 
-    progress(70, 'Fetching player stats...');
-    // Basketaki roster page contains the stats table
-    const rosterHTML = await px(`${BASE}/teams/${TEAM}/roster`);
-    const rosterDoc  = ph(rosterHTML);
+    progress(85);
+    buildRoster(data.players || []);
 
-    progress(85, 'Building stats & roster...');
-    const playerStats = buildStats(rosterDoc);
-    buildRoster(rosterDoc, playerStats);
+    progress(92);
+    buildHeader(data);
+    buildNextGame(data.nextGame);
+    buildTicker(data);
 
-    progress(100, 'Ready!');
-    setTimeout(hideLoader, 400);
+    // Show last updated time in footer
+    if (data.updated) {
+      const d = new Date(data.updated);
+      const fmt = d.toLocaleDateString('en-GB', {day:'2-digit',month:'short',year:'numeric'});
+      const el = document.querySelector('.footer-right');
+      if (el) el.textContent = `Last updated: ${fmt} · basketaki.com`;
+    }
+
+    progress(100);
+    setTimeout(hideLoader, 300);
 
   } catch(e) {
     console.error('Init error:', e);
-    $('load-text').textContent = 'Error loading data — retrying...';
-    setTimeout(hideLoader, 3000);
+    // data.json missing — show helpful message
+    setTimeout(hideLoader, 800);
   }
 }
 
