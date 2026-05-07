@@ -496,9 +496,7 @@ function buildStats(players) {
 function buildRoster(players) {
   // Load players.csv for photo + number mapping
   fetch('players.csv').then(r => r.text()).then(text => {
-    const lines   = text.trim().split(/
-?
-/);
+    const lines   = text.trim().split(/\r?\n/);
     const delim   = lines[0].includes(';') ? ';' : ',';
     const headers = lines[0].split(delim).map(h => h.trim().replace(/^﻿/,''));
     const csvRows = lines.slice(1).map(l => {
