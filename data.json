@@ -1,62 +1,50 @@
 {
-  "updated": "2026-05-07T13:10:51.169450",
+  "updated": "2026-05-10T08:09:38.222298",
   "record": {
-    "wins": 13,
+    "wins": 14,
     "losses": 12,
-    "pct": 52
+    "pct": 54
   },
   "streak": {
-    "type": "loss",
-    "count": 2
+    "type": "win",
+    "count": 1
   },
   "nextGame": {
-    "dateTime": "09/05/2026 22:00",
-    "date": "09/05/2026",
-    "time": "22:00",
-    "opponent": "Κουκουβάγιες BC",
-    "oppSlug": "koukouvagies-bc",
-    "ha": "Home",
-    "venue": "Ιβανώφειο Κλειστό Γυμναστήριο",
+    "dateTime": "19/05/2026 20:30",
+    "date": "19/05/2026",
+    "time": "20:30",
+    "opponent": "Φαβορί-τες BC",
+    "oppSlug": "favorites-bc",
+    "ha": "Away",
+    "venue": "Basketball Airdome",
     "cat": "S.Development 2 Thessaloniki",
     "isFuture": true,
-    "ts": "2026-05-09T22:00:00"
+    "ts": "2026-05-19T20:30:00"
   },
   "schedule": [
     {
-      "dateTime": "09/05/2026 22:00",
-      "date": "09/05/2026",
-      "time": "22:00",
-      "opponent": "Κουκουβάγιες BC",
-      "oppSlug": "koukouvagies-bc",
-      "ha": "Home",
-      "venue": "Ιβανώφειο Κλειστό Γυμναστήριο",
-      "cat": "S.Development 2 Thessaloniki",
-      "isFuture": true,
-      "ts": "2026-05-09T22:00:00"
-    },
-    {
-      "dateTime": "-",
-      "date": "-",
-      "time": "-",
+      "dateTime": "19/05/2026 20:30",
+      "date": "19/05/2026",
+      "time": "20:30",
       "opponent": "Φαβορί-τες BC",
       "oppSlug": "favorites-bc",
       "ha": "Away",
-      "venue": "",
+      "venue": "Basketball Airdome",
       "cat": "S.Development 2 Thessaloniki",
-      "isFuture": false,
-      "ts": null
+      "isFuture": true,
+      "ts": "2026-05-19T20:30:00"
     },
     {
-      "dateTime": "-",
-      "date": "-",
-      "time": "-",
-      "opponent": "Bad Boys",
-      "oppSlug": "bad-boys",
+      "dateTime": "28/05/2026 20:30",
+      "date": "28/05/2026",
+      "time": "20:30",
+      "opponent": "Badboys",
+      "oppSlug": "badboys",
       "ha": "Home",
-      "venue": "",
+      "venue": "Respect Arena NBA",
       "cat": "S.Development 2 Thessaloniki",
-      "isFuture": false,
-      "ts": null
+      "isFuture": true,
+      "ts": "2026-05-28T20:30:00"
     },
     {
       "dateTime": "-",
@@ -120,6 +108,17 @@
     }
   ],
   "results": [
+    {
+      "date": "09/05/2026",
+      "opponent": "Κουκουβάγιες BC",
+      "oppSlug": "",
+      "ts": 81,
+      "os": 48,
+      "win": true,
+      "ha": "Home",
+      "cat": "S.Development 2 Thessaloniki",
+      "gameId": "36290"
+    },
     {
       "date": "26/04/2026",
       "opponent": "Golden Rail Warriors",
